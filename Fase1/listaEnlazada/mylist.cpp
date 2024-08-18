@@ -25,16 +25,26 @@ void MyList::insert(string nombres, string apellidos, string fechaNacimiento, st
 
 // Método para imprimir todos los nodos de la lista
 void MyList::print() {
-    // Si la lista está vacía, imprimir un mensaje y salir
     if (head == nullptr) {
         cout << "No hay usuarios en la lista." << endl;
         return;
     }
 
-    // Recorrer la lista e imprimir la información de cada nodo
     Node* current = head;
     while (current != nullptr) {
         current->print();
         current = current->next;
     }
+}
+
+// Método para buscar un nodo por su correo electrónico
+Node* MyList::buscar(const string& correo) {
+    Node* current = head;
+    while (current != nullptr) {
+        if (current->correo == correo) {
+            return current;
+        }
+        current = current->next;
+    }
+    return nullptr; // Retorna nullptr si no se encuentra el nodo
 }

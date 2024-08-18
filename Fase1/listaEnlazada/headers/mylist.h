@@ -18,6 +18,9 @@ public:
 
     // Método para imprimir todos los nodos en la lista
     void print();
+
+    // Método para buscar un nodo por su correo electrónico
+    Node* buscar(const string& correo);
 };
 
 #endif

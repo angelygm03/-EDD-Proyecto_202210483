@@ -11,6 +11,7 @@ using json = nlohmann::json;
 const string ADMIN_USER = "admin@gmail.com";
 const string ADMIN_PASSWORD = "EDD2S2024";
 
+// Función para cargar usuarios desde un archivo JSON
 void cargarDesdeJson(const string& filename, MyList& lista) {
     ifstream archivo(filename);
     if (!archivo.is_open()) {
@@ -31,6 +32,36 @@ void cargarDesdeJson(const string& filename, MyList& lista) {
         );
     }
 }
+
+// Función para cargar y mostrar las solicitudes desde un archivo JSON
+void cargarSolicitudesDesdeJson(const string& filename) {
+    ifstream archivo(filename);
+    if (!archivo.is_open()) {
+        cout << "No se pudo abrir el archivo " << filename << endl;
+        return;
+    }
+
+    json solicitudes;
+    archivo >> solicitudes;
+
+    cout << "Solicitudes leídas desde el archivo JSON:" << endl;
+    for (const auto& solicitud : solicitudes) {
+        cout << "Emisor: " << solicitud["emisor"] << endl;
+        cout << "Receptor: " << solicitud["receptor"] << endl;
+        cout << "Estado: " << solicitud["estado"] << endl;
+        cout << "-----------------------------" << endl;
+    }
+}
+
+// Función para autenticar al usuario
+bool autenticarUsuario(const string& correo, const string& contrasena, MyList& lista) {
+    Node* usuario = lista.buscar(correo);
+    if (usuario != nullptr && usuario->contrasena == contrasena) {
+        return true;
+    }
+    return false;
+}
+
 
 int mostrarMenu() {
     int opcion;
@@ -66,6 +97,13 @@ void mostrarMenuAdmin(MyList& lista) {
                 cargarDesdeJson(filename, lista);
                 break;
             }
+            case 2: {
+                string filename;
+                cout << "Ingrese el nombre del archivo JSON con solicitudes: ";
+                cin >> filename;
+                cargarSolicitudesDesdeJson(filename);
+                break;
+            }
             case 4: {
                 lista.print();
                 break;
@@ -86,12 +124,33 @@ void mostrarMenuAdmin(MyList& lista) {
 }
 
 void mostrarMenuUsuario() {
-    cout << "********** Opciones **********\n";
-    cout << "1. Perfil \n";
-    cout << "2. Solicitudes \n";
-    cout << "3. Publicaciones \n";
-    cout << "4. Reportes \n";
-    cout << "5. Salir \n";
+    int opcion;
+    do {
+        cout << "********** MENU USUARIO **********\n";
+        cout << "1. Ver perfil \n";
+        cout << "2. Ver solicitudes \n";
+        cout << "3. Ver publicaciones \n";
+        cout << "4. Salir \n";
+        cout << "Ingrese una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                cout << "Mostrando perfil...\n";
+                break;
+            case 2:
+                cout << "Mostrando solicitudes...\n";
+                break;
+            case 3:
+                cout << "Mostrando publicaciones...\n";
+                break;
+            case 4:
+                cout << "Saliendo...\n";
+                return;
+            default:
+                cout << "Opcion invalida. Intentelo de nuevo.\n";
+        }
+    } while (opcion != 4);
 }
 
 int main() {
@@ -110,8 +169,10 @@ int main() {
                 // Validar credenciales
                 if (usuario == ADMIN_USER && password == ADMIN_PASSWORD) {
                     mostrarMenuAdmin(lista);
-                } else {
+                } else if (autenticarUsuario(usuario, password, lista)) {
                     mostrarMenuUsuario();
+                } else {
+                    cout << "Credenciales incorrectas. Inténtelo de nuevo.\n";
                 }
                 break;
             }
