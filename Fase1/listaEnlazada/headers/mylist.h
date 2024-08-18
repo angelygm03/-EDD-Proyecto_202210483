@@ -21,6 +21,9 @@ public:
 
     // Método para buscar un nodo por su correo electrónico
     Node* buscar(const string& correo);
+
+    // Método para eliminar un nodo por su correo electrónico
+    bool eliminar(const string& correo);
 };
 
 #endif

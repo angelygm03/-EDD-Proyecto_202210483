@@ -48,3 +48,32 @@ Node* MyList::buscar(const string& correo) {
     }
     return nullptr; // Retorna nullptr si no se encuentra el nodo
 }
+
+// Método para eliminar un nodo por su correo electrónico
+bool MyList::eliminar(const string& correo) {
+    if (head == nullptr) {
+        return false; // Lista vacía, no se puede eliminar nada
+    }
+
+    // Si el nodo a eliminar es el primero
+    if (head->correo == correo) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+        size--;
+        return true;
+    }
+
+    Node* current = head;
+    while (current->next != nullptr) {
+        if (current->next->correo == correo) {
+            Node* temp = current->next;
+            current->next = current->next->next;
+            delete temp;
+            size--;
+            return true;
+        }
+        current = current->next;
+    }
+    return false; // Nodo no encontrado
+}

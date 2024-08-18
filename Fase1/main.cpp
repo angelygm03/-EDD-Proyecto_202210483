@@ -3,6 +3,7 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include "listaEnlazada/headers/mylist.h"
+#include "pila/headers/stack.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -34,7 +35,7 @@ void cargarDesdeJson(const string& filename, MyList& lista) {
 }
 
 // Función para cargar y mostrar las solicitudes desde un archivo JSON
-void cargarSolicitudesDesdeJson(const string& filename) {
+void cargarSolicitudesDesdeJson(const string& filename, MyList& lista) {
     ifstream archivo(filename);
     if (!archivo.is_open()) {
         cout << "No se pudo abrir el archivo " << filename << endl;
@@ -46,12 +47,14 @@ void cargarSolicitudesDesdeJson(const string& filename) {
 
     cout << "Solicitudes leídas desde el archivo JSON:" << endl;
     for (const auto& solicitud : solicitudes) {
-        cout << "Emisor: " << solicitud["emisor"] << endl;
-        cout << "Receptor: " << solicitud["receptor"] << endl;
-        cout << "Estado: " << solicitud["estado"] << endl;
-        cout << "-----------------------------" << endl;
+        Node* usuario = lista.buscar(solicitud["receptor"]);
+        if (usuario != nullptr) {
+            usuario->solicitudes.push(solicitud["emisor"], solicitud["receptor"], solicitud["estado"]);
+        }
     }
 }
+
+
 
 // Función para autenticar al usuario
 bool autenticarUsuario(const string& correo, const string& contrasena, MyList& lista) {
@@ -61,6 +64,8 @@ bool autenticarUsuario(const string& correo, const string& contrasena, MyList& l
     }
     return false;
 }
+
+
 
 
 int mostrarMenu() {
@@ -101,18 +106,25 @@ void mostrarMenuAdmin(MyList& lista) {
                 string filename;
                 cout << "Ingrese el nombre del archivo JSON con solicitudes: ";
                 cin >> filename;
-                cargarSolicitudesDesdeJson(filename);
+                cargarSolicitudesDesdeJson(filename, lista);
                 break;
             }
             case 4: {
-                lista.print();
+                cout << "Ingrese el correo del usuario a eliminar: ";
+                string correo;
+                cin >> correo;
+                if (lista.eliminar(correo)) {
+                    cout << "Usuario eliminado correctamente.\n";
+                } else {
+                    cout << "Usuario no encontrado.\n";
+                }
                 break;
             }
             case 5: {
                 cout << "********** Reportes **********\n";
                 lista.print();
                 break;
-            }           
+            }
             case 6: {
                 return;
             }
@@ -123,26 +135,44 @@ void mostrarMenuAdmin(MyList& lista) {
     } while (opcion != 6);
 }
 
-void mostrarMenuUsuario() {
+
+void mostrarMenuUsuario(MyList& lista, const string& correoUsuario) {
     int opcion;
     do {
         cout << "********** MENU USUARIO **********\n";
         cout << "1. Ver perfil \n";
-        cout << "2. Ver solicitudes \n";
-        cout << "3. Ver publicaciones \n";
+        cout << "2. Eliminar perfil \n";
+        cout << "3. Ver solicitudes \n";
         cout << "4. Salir \n";
         cout << "Ingrese una opcion: ";
         cin >> opcion;
 
         switch (opcion) {
-            case 1:
-                cout << "Mostrando perfil...\n";
+            case 1: {
+                Node* usuario = lista.buscar(correoUsuario);
+                if (usuario) {
+                    usuario->print();
+                } else {
+                    cout << "Usuario no encontrado.\n";
+                }
                 break;
-            case 2:
-                cout << "Mostrando solicitudes...\n";
+            }
+            case 2: {
+                cout << "¿Está seguro de que desea eliminar su perfil? (s/n): ";
+                char confirmacion;
+                cin >> confirmacion;
+                if (confirmacion == 's' || confirmacion == 'S') {
+                    if (lista.eliminar(correoUsuario)) {
+                        cout << "Perfil eliminado correctamente.\n";
+                        return;
+                    } else {
+                        cout << "No se pudo eliminar el perfil.\n";
+                    }
+                }
                 break;
+            }
             case 3:
-                cout << "Mostrando publicaciones...\n";
+                cout << "Mostrando solicitudes...\n";
                 break;
             case 4:
                 cout << "Saliendo...\n";
@@ -152,6 +182,7 @@ void mostrarMenuUsuario() {
         }
     } while (opcion != 4);
 }
+
 
 int main() {
     MyList lista;
@@ -170,7 +201,8 @@ int main() {
                 if (usuario == ADMIN_USER && password == ADMIN_PASSWORD) {
                     mostrarMenuAdmin(lista);
                 } else if (autenticarUsuario(usuario, password, lista)) {
-                    mostrarMenuUsuario();
+                    string correoUsuario = usuario;
+                    mostrarMenuUsuario(lista, correoUsuario);
                 } else {
                     cout << "Credenciales incorrectas. Inténtelo de nuevo.\n";
                 }

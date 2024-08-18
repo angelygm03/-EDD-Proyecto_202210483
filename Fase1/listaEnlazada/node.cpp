@@ -14,5 +14,7 @@ void Node::print() {
     cout << "Fecha de Nacimiento: " << fechaNacimiento << endl;
     cout << "Correo: " << correo << endl;
     cout << "Contrasenia: " << contrasena << endl;
+    cout << "Solicitudes:" << endl;
+    solicitudes.print();  // Imprimir la pila de solicitudes
     cout << "-----------------------------" << endl;
 }
