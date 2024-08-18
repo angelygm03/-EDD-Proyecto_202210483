@@ -94,6 +94,7 @@ int mostrarMenu() {
     cout << "    BIENVENIDO A SOCIAL STRUCTURE      \n";
     cout << "*************************************\n";
     cout << "1. Iniciar sesion \n";
+    cout << "2. Registrarse \n";
     cout << "3. Informacion \n";
     cout << "4. Salir \n";
     cout << "Ingrese una opcion: ";
@@ -240,6 +241,24 @@ int main() {
                 } else {
                     cout << "Credenciales incorrectas. Inténtelo de nuevo.\n";
                 }
+                break;
+            }
+            case 2: {
+                string nombres, apellidos, fechaNacimiento, correo, contrasena;
+                cout << " --------------- Registro de Usuario ---------------\n";
+                cout << "Ingrese sus nombres: ";
+                cin >> nombres;
+                cout << "Ingrese sus apellidos: ";
+                cin >> apellidos;
+                cout << "Ingrese su fecha de nacimiento: ";
+                cin >> fechaNacimiento;
+                cout << "Ingrese su correo: ";
+                cin >> correo;
+                cout << "Ingrese su contraseña: ";
+                cin >> contrasena;
+
+                lista.insert(nombres, apellidos, fechaNacimiento, correo, contrasena);
+                cout << "Usuario registrado correctamente.\n";
                 break;
             }
             case 3: {
