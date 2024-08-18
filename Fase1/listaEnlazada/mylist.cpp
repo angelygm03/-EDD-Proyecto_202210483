@@ -119,7 +119,7 @@ void MyList::manejarSolicitudes(Node* usuario) {
             current = usuario->solicitudes.getTop(); // Actualizar el puntero al nuevo nodo superior
 
         } else {
-            // Si la solicitud no es pendiente se avanzamos al siguiente nodo sin eliminar el actual
+            // Si la solicitud no es pendiente se avanza al siguiente nodo sin eliminar el actual
             current = current->next;
         }
     }

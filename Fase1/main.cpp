@@ -54,6 +54,28 @@ void cargarSolicitudesDesdeJson(const string& filename, MyList& lista) {
     }
 }
 
+void enviarSolicitud(MyList& lista, const string& correoUsuario) {
+    string correoDestino;
+    cout << "Ingrese el correo del usuario al que desea enviar una solicitud: ";
+    cin >> correoDestino;
+
+    Node* destinatario = lista.buscar(correoDestino);
+    if (destinatario != nullptr) {
+        // Crear una nueva solicitud pendiente
+        StackNode* nuevaSolicitud = new StackNode(correoUsuario, destinatario->correo, "PENDIENTE");
+        nuevaSolicitud->emisor = correoUsuario;
+        nuevaSolicitud->receptor = destinatario->correo;
+        nuevaSolicitud->estado = "PENDIENTE";
+        nuevaSolicitud->next = nullptr;
+
+        // Insertar la solicitud en la pila del receptor
+        destinatario->solicitudes.push(correoUsuario, destinatario->correo, "PENDIENTE");
+
+        cout << "Solicitud enviada a " << destinatario->nombres << " " << destinatario->apellidos << " (" << destinatario->correo << ")" << endl;
+    } else {
+        cout << "El usuario con el correo " << correoDestino << " no se encontró." << endl;
+    }
+}
 
 
 // Función para autenticar al usuario
@@ -64,8 +86,6 @@ bool autenticarUsuario(const string& correo, const string& contrasena, MyList& l
     }
     return false;
 }
-
-
 
 
 int mostrarMenu() {
@@ -143,7 +163,8 @@ void mostrarMenuUsuario(MyList& lista, const string& correoUsuario) {
         cout << "1. Ver perfil \n";
         cout << "2. Eliminar perfil \n";
         cout << "3. Ver solicitudes \n";
-        cout << "4. Salir \n";
+        cout << "4. Enviar solicitud \n";
+        cout << "5. Salir \n";
         cout << "Ingrese una opcion: ";
         cin >> opcion;
 
@@ -180,14 +201,20 @@ void mostrarMenuUsuario(MyList& lista, const string& correoUsuario) {
                 }
                 break;
             }
-
-            case 4:
-                cout << "Saliendo...\n";
-                return;
-            default:
-                cout << "Opcion invalida. Intentelo de nuevo.\n";
+            case 4: {
+                enviarSolicitud(lista, correoUsuario);
+                break;
+            }
+            case 5: {
+                cout << "Saliendo del menú de usuario." << endl;
+                break;
+            }
+            default: {
+                cout << "Opción no válida. Inténtelo de nuevo.\n";
+                break;
+            }
         }
-    } while (opcion != 4);
+    } while (opcion != 5);
 }
 
 
@@ -228,8 +255,10 @@ int main() {
                 cout << "Saliendo...";
                 break;
             }
-            default:
+            default: {
                 cout << "Opcion invalida. Intentelo de nuevo.\n";
+                break;
+            }
         }
     } while (opcion != 4);
     return 0;

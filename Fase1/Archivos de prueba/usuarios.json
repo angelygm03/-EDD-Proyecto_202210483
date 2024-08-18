@@ -47,5 +47,19 @@
         "fecha de nacimiento": "02/07/1995",
         "apellidos": "Vargas Lopez",
         "contraseña": "diegovargas123"
+    },
+    {
+        "nombres": "Yessica",
+        "correo": "yess",
+        "fecha de nacimiento": "20/05/2002",
+        "apellidos": "Ramirez",
+        "contraseña": "yes"
+    },
+    {
+        "nombres": "Olivia",
+        "correo": "oliv ",
+        "fecha de nacimiento": "15/11/2000",
+        "apellidos": "Rodrigo",
+        "contraseña": "oliv"
     }
 ]
