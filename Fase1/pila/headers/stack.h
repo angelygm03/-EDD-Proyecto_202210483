@@ -5,7 +5,7 @@
 
 class Stack {
 private:
-    StackNode* top;
+    StackNode* top;  // Puntero al nodo superior de la pila
 
 public:
     Stack();
@@ -14,6 +14,9 @@ public:
     void pop();
     bool isEmpty() const;
     void print() const;
+
+    // método para obtener el nodo superior de la pila
+    StackNode* getTop() const;  
 };
 
 #endif

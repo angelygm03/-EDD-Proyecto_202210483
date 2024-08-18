@@ -8,8 +8,8 @@
     },
     {
         "apellidos": "Lopez Martinez",
-        "contraseña": "securepass456",
-        "correo": "maria.lopez@example.com",
+        "contraseña": "a",
+        "correo": "a",
         "fecha de nacimiento": "22/08/1985",
         "nombres": "Maria"
     },
@@ -40,5 +40,12 @@
         "fecha de nacimiento": "25/12/1998",
         "nombres": "Ana",
         "contraseña": "anamartinez123"
+    },
+    {
+        "nombres": "Diego",
+        "correo": "diego.vargas@example.com",
+        "fecha de nacimiento": "02/07/1995",
+        "apellidos": "Vargas Lopez",
+        "contraseña": "diegovargas123"
     }
 ]

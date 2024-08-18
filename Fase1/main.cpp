@@ -171,9 +171,16 @@ void mostrarMenuUsuario(MyList& lista, const string& correoUsuario) {
                 }
                 break;
             }
-            case 3:
-                cout << "Mostrando solicitudes...\n";
+            case 3: {
+                Node* usuario = lista.buscar(correoUsuario);
+                if (usuario != nullptr) {
+                    lista.manejarSolicitudes(usuario);
+                } else {
+                    cout << "Usuario no encontrado.\n";
+                }
                 break;
+            }
+
             case 4:
                 cout << "Saliendo...\n";
                 return;

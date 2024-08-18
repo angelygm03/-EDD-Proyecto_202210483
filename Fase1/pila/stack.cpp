@@ -38,3 +38,8 @@ void Stack::print() const {
         current = current->next;
     }
 }
+
+// Método para obtener el nodo superior de la pila
+StackNode* Stack::getTop() const {
+    return top;
+}

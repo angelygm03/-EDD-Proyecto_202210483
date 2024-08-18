@@ -77,3 +77,54 @@ bool MyList::eliminar(const string& correo) {
     }
     return false; // Nodo no encontrado
 }
+
+void MyList::manejarSolicitudes(Node* usuario) {
+    StackNode* current = usuario->solicitudes.getTop(); // Accede al nodo superior de la pila
+
+    bool hayPendientes = false;
+
+    while (current != nullptr) {
+        if (current->estado == "PENDIENTE") {
+            hayPendientes = true;
+
+            // Buscar el emisor en la lista de usuarios
+            Node* solicitante = buscar(current->emisor);
+            if (solicitante != nullptr) {
+
+                string nombreCompleto = solicitante->nombres + " " + solicitante->apellidos; //concatenar nombres y apellidos
+
+                cout <<"--------------- Solicitud de Amistad --------------- \n";
+                cout << "Nombre: " << nombreCompleto << endl;
+                cout << "Correo: " << solicitante->correo << endl;
+            } else {
+                cout << "El solicitante no se encuentra en la lista de usuarios." << endl;
+            }
+
+            cout << "¿Deseas aceptar esta solicitud? (s/n): ";
+            char decision;
+            cin >> decision;
+
+            if (decision == 's' || decision == 'S') {
+                current->estado = "ACEPTADA";
+                cout << "Solicitud aceptada." << endl;
+            } else if (decision == 'n' || decision == 'N') {
+                current->estado = "RECHAZADA";
+                cout << "Solicitud rechazada." << endl;
+            } else {
+                cout << "Mantenida como pendiente." << endl;
+            }
+
+            // Eliminar el nodo procesado de la pila
+            usuario->solicitudes.pop(); 
+            current = usuario->solicitudes.getTop(); // Actualizar el puntero al nuevo nodo superior
+
+        } else {
+            // Si la solicitud no es pendiente se avanzamos al siguiente nodo sin eliminar el actual
+            current = current->next;
+        }
+    }
+
+    if (!hayPendientes) {
+        cout << "No tienes más solicitudes pendientes." << endl;
+    }
+}

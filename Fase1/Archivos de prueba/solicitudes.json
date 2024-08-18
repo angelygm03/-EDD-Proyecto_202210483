@@ -6,7 +6,7 @@
     },
     {
         "emisor": "juan.perez@example.com",
-        "receptor": "maria.lopez@example.com",
+        "receptor": "a",
         "estado": "PENDIENTE"
     },
     {
@@ -16,7 +16,12 @@
     },
     {
         "emisor": "ana.martinez@example.com",
-        "receptor": "maria.lopez@example.com",
+        "receptor": "a",
         "estado": "ACEPTADA"
+    },
+    {
+        "emisor": "diego.vargas@example.com",
+        "receptor": "a",
+        "estado": "PENDIENTE"
     }
 ]                                

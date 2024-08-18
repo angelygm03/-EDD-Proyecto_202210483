@@ -24,6 +24,10 @@ public:
 
     // Método para eliminar un nodo por su correo electrónico
     bool eliminar(const string& correo);
+
+    // Método para manejar las solicitudes pendientes
+    void manejarSolicitudes(Node* usuario);
+
 };
 
 #endif
