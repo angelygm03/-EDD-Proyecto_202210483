@@ -1,9 +1,12 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <chrono>
+#include <iomanip>
 #include <nlohmann/json.hpp>
 #include "listaEnlazada/headers/mylist.h"
 #include "pila/headers/stack.h"
+#include "listaDobleEnlazada/headers/doublelist.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -54,6 +57,41 @@ void cargarSolicitudesDesdeJson(const string& filename, MyList& lista) {
     }
 }
 
+// Función para cargar publicaciones desde un archivo JSON
+void cargarPublicacionesDesdeJson(const string& filename, DoubleList& listaDoble) {
+    ifstream archivo(filename);
+    if (!archivo.is_open()) {
+        cout << "No se pudo abrir el archivo " << filename << endl;
+        return;
+    }
+
+    json publicaciones;
+    archivo >> publicaciones;
+
+    for (const auto& publicacion : publicaciones) {
+        listaDoble.insertAtEnd(
+            publicacion["correo"],
+            publicacion["contenido"],
+            publicacion["fecha"],
+            publicacion["hora"]
+        );
+    }
+
+    cout << "Publicaciones cargadas exitosamente." << endl;
+}
+
+string obtenerFechaHoraActual() {
+    auto ahora = std::chrono::system_clock::now();
+    auto tiempo = std::chrono::system_clock::to_time_t(ahora);
+    std::tm* tm_local = std::localtime(&tiempo);
+
+    std::ostringstream fechaHoraStream;
+    fechaHoraStream << std::put_time(tm_local, "%d/%m/%Y %H:%M");
+
+    return fechaHoraStream.str();
+}
+
+
 void enviarSolicitud(MyList& lista, const string& correoUsuario) {
     string correoDestino;
     cout << "Ingrese el correo del usuario al que desea enviar una solicitud: ";
@@ -77,7 +115,6 @@ void enviarSolicitud(MyList& lista, const string& correoUsuario) {
     }
 }
 
-
 // Función para autenticar al usuario
 bool autenticarUsuario(const string& correo, const string& contrasena, MyList& lista) {
     Node* usuario = lista.buscar(correo);
@@ -86,7 +123,6 @@ bool autenticarUsuario(const string& correo, const string& contrasena, MyList& l
     }
     return false;
 }
-
 
 int mostrarMenu() {
     int opcion;
@@ -102,7 +138,7 @@ int mostrarMenu() {
     return opcion;
 }
 
-void mostrarMenuAdmin(MyList& lista) {
+void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble) {
     int opcion;
     do {
         cout << "********** MENU ADMINISTRADOR **********\n";
@@ -125,9 +161,16 @@ void mostrarMenuAdmin(MyList& lista) {
             }
             case 2: {
                 string filename;
-                cout << "Ingrese el nombre del archivo JSON con solicitudes: ";
+                cout << "Ingrese el nombre del archivo JSON:  ";
                 cin >> filename;
                 cargarSolicitudesDesdeJson(filename, lista);
+                break;
+            }
+            case 3: {
+                string filename;
+                cout << "Ingrese el nombre del archivo JSON: ";
+                cin >> filename;
+                cargarPublicacionesDesdeJson(filename, listaDoble);
                 break;
             }
             case 4: {
@@ -143,7 +186,12 @@ void mostrarMenuAdmin(MyList& lista) {
             }
             case 5: {
                 cout << "********** Reportes **********\n";
-                lista.print();
+                cout << "Información de usuarios:\n";
+                lista.print();  // Mostrar información de usuarios
+                
+                cout << "\nPublicaciones:\n";
+                listaDoble.print();  // Mostrar publicaciones
+                
                 break;
             }
             case 6: {
@@ -156,16 +204,81 @@ void mostrarMenuAdmin(MyList& lista) {
     } while (opcion != 6);
 }
 
-
-void mostrarMenuUsuario(MyList& lista, const string& correoUsuario) {
+void mostrarMenuPublicaciones(DoubleList& listaDoble, const string& correoUsuario) {
     int opcion;
+    do {
+        cout << "********** MENU PUBLICACIONES **********\n";
+        cout << "1. Ver todas las publicaciones \n";
+        cout << "2. Crear una nueva publicacion \n";
+        cout << "3. Eliminar una publicacion\n";
+        cout << "4. Volver al menu anterior \n";
+        cout << "Ingrese una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: {
+                // Mostrar todas las publicaciones
+                listaDoble.print();
+                break;
+            }
+            case 2: {
+                string textoPublicacion;
+                cout << "Escriba aquí: \n";
+                cin.ignore();  // Limpiar el buffer
+                getline(cin, textoPublicacion);  // Obtener la publicación como una línea completa de texto
+
+                // Obtener la fecha y hora actuales
+                string fechaHoraActual = obtenerFechaHoraActual();
+                size_t pos = fechaHoraActual.find(' ');
+                string fecha = fechaHoraActual.substr(0, pos);
+                string hora = fechaHoraActual.substr(pos + 1);
+
+                // Agregar la publicación a la lista
+                listaDoble.insertAtEnd(correoUsuario, textoPublicacion, fecha, hora);
+
+                cout << "Publicación creada" << endl;
+                break;
+            }
+            case 3: {
+                // Mostrar las publicaciones del usuario
+                listaDoble.printByUser(correoUsuario);
+                
+                // Solicitar el ID de la publicación a eliminar
+                int index;
+                cout << "Ingrese el índice de la publicación que desea eliminar: ";
+                cin >> index;
+
+                // Eliminar la publicación de la lista
+                if (listaDoble.deleteByUser(index, correoUsuario)) {
+                    cout << "Publicación eliminada exitosamente." << endl;
+                } else {
+                    cout << "ID no valido o la publicacion no pertenece al usuario." << endl;
+                }
+                
+                break;
+            }
+            case 4: {
+                cout << "Volviendo al menú..." << endl;
+                break;
+            }
+            default: {
+                cout << "Opción no válida. Inténtelo de nuevo.\n";
+                break;
+            }
+        }
+    } while (opcion != 4);
+}
+
+
+void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, const string& correoUsuario) {    int opcion;
     do {
         cout << "********** MENU USUARIO **********\n";
         cout << "1. Ver perfil \n";
         cout << "2. Eliminar perfil \n";
         cout << "3. Ver solicitudes \n";
         cout << "4. Enviar solicitud \n";
-        cout << "5. Salir \n";
+        cout << "5. Publicaciones \n";
+        cout << "6. Salir \n";
         cout << "Ingrese una opcion: ";
         cin >> opcion;
 
@@ -207,6 +320,10 @@ void mostrarMenuUsuario(MyList& lista, const string& correoUsuario) {
                 break;
             }
             case 5: {
+                mostrarMenuPublicaciones(listaDoble, correoUsuario);
+                break;
+            }
+            case 6: {
                 cout << "Saliendo del menú de usuario." << endl;
                 break;
             }
@@ -215,29 +332,29 @@ void mostrarMenuUsuario(MyList& lista, const string& correoUsuario) {
                 break;
             }
         }
-    } while (opcion != 5);
+    } while (opcion != 6);
 }
-
 
 int main() {
     MyList lista;
+    DoubleList listaDoble;
     int opcion;
     do {
         opcion = mostrarMenu();
         switch (opcion) {
             case 1: {
                 string usuario, password;
-                cout << "Ingrese usuario: ";
+                cout << "Ingrese su usuario: ";
                 cin >> usuario;
-                cout << "Ingrese contrasenia: ";
+                cout << "Ingrese su contrasenia: ";
                 cin >> password;
 
                 // Validar credenciales
                 if (usuario == ADMIN_USER && password == ADMIN_PASSWORD) {
-                    mostrarMenuAdmin(lista);
+                    mostrarMenuAdmin(lista, listaDoble);
                 } else if (autenticarUsuario(usuario, password, lista)) {
                     string correoUsuario = usuario;
-                    mostrarMenuUsuario(lista, correoUsuario);
+                    mostrarMenuUsuario(lista, listaDoble, correoUsuario);
                 } else {
                     cout << "Credenciales incorrectas. Inténtelo de nuevo.\n";
                 }
