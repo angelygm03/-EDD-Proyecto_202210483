@@ -7,6 +7,7 @@
 #include "listaEnlazada/headers/mylist.h"
 #include "pila/headers/stack.h"
 #include "listaDobleEnlazada/headers/doublelist.h"
+#include "circularDobleEnlazada/headers/circularDoubleList.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -35,6 +36,7 @@ void cargarDesdeJson(const string& filename, MyList& lista) {
             usuario["contraseña"]
         );
     }
+    cout << "Usuarios cargados exitosamente." << endl;
 }
 
 // Función para cargar y mostrar las solicitudes desde un archivo JSON
@@ -48,7 +50,6 @@ void cargarSolicitudesDesdeJson(const string& filename, MyList& lista) {
     json solicitudes;
     archivo >> solicitudes;
 
-    cout << "Solicitudes leídas desde el archivo JSON:" << endl;
     for (const auto& solicitud : solicitudes) {
         Node* usuario = lista.buscar(solicitud["receptor"]);
         if (usuario != nullptr) {
@@ -58,7 +59,7 @@ void cargarSolicitudesDesdeJson(const string& filename, MyList& lista) {
 }
 
 // Función para cargar publicaciones desde un archivo JSON
-void cargarPublicacionesDesdeJson(const string& filename, DoubleList& listaDoble) {
+void cargarPublicacionesDesdeJson(const string& filename, DoubleList& listaDoble, CircularDoubleList& listaCircular) {
     ifstream archivo(filename);
     if (!archivo.is_open()) {
         cout << "No se pudo abrir el archivo " << filename << endl;
@@ -70,6 +71,12 @@ void cargarPublicacionesDesdeJson(const string& filename, DoubleList& listaDoble
 
     for (const auto& publicacion : publicaciones) {
         listaDoble.insertAtEnd(
+            publicacion["correo"],
+            publicacion["contenido"],
+            publicacion["fecha"],
+            publicacion["hora"]
+        );
+        listaCircular.insertAtEnd(
             publicacion["correo"],
             publicacion["contenido"],
             publicacion["fecha"],
@@ -138,7 +145,7 @@ int mostrarMenu() {
     return opcion;
 }
 
-void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble) {
+void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList& listaCircular) {
     int opcion;
     do {
         cout << "********** MENU ADMINISTRADOR **********\n";
@@ -170,7 +177,7 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble) {
                 string filename;
                 cout << "Ingrese el nombre del archivo JSON: ";
                 cin >> filename;
-                cargarPublicacionesDesdeJson(filename, listaDoble);
+                cargarPublicacionesDesdeJson(filename, listaDoble, listaCircular);
                 break;
             }
             case 4: {
@@ -204,7 +211,7 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble) {
     } while (opcion != 6);
 }
 
-void mostrarMenuPublicaciones(DoubleList& listaDoble, const string& correoUsuario) {
+void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaCircular, const string& correoUsuario) {
     int opcion;
     do {
         cout << "********** MENU PUBLICACIONES **********\n";
@@ -233,8 +240,11 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, const string& correoUsuari
                 string fecha = fechaHoraActual.substr(0, pos);
                 string hora = fechaHoraActual.substr(pos + 1);
 
-                // Agregar la publicación a la lista
+                // Agregar la publicación a la lista doble
                 listaDoble.insertAtEnd(correoUsuario, textoPublicacion, fecha, hora);
+
+                // Agregar la publicación a la lista circular
+                listaCircular.insertAtEnd(correoUsuario, textoPublicacion, fecha, hora);
 
                 cout << "Publicación creada" << endl;
                 break;
@@ -245,14 +255,19 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, const string& correoUsuari
                 
                 // Solicitar el ID de la publicación a eliminar
                 int index;
-                cout << "Ingrese el índice de la publicación que desea eliminar: ";
+                cout << "Ingrese el ID de la publicación que desea eliminar: ";
                 cin >> index;
 
-                // Eliminar la publicación de la lista
-                if (listaDoble.deleteByUser(index, correoUsuario)) {
-                    cout << "Publicación eliminada exitosamente." << endl;
+                // Eliminar la publicación de la lista circular
+                if (listaCircular.deleteByPosition(index)) {
+                    cout << "Publicación eliminada exitosamente" << endl;
+                    
+                    // También eliminamos de la lista doble
+                    if (!listaDoble.deleteByUser(index, correoUsuario)) {
+                        cout << "Error al eliminar la publicación" << endl;
+                    }
                 } else {
-                    cout << "ID no valido o la publicacion no pertenece al usuario." << endl;
+                    cout << "ID ingresado no valido" << endl;
                 }
                 
                 break;
@@ -270,7 +285,9 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, const string& correoUsuari
 }
 
 
-void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, const string& correoUsuario) {    int opcion;
+
+void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleList& listaCircular, const string& correoUsuario) {
+    int opcion;
     do {
         cout << "********** MENU USUARIO **********\n";
         cout << "1. Ver perfil \n";
@@ -301,30 +318,23 @@ void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, const string& cor
                         cout << "Perfil eliminado correctamente.\n";
                         return;
                     } else {
-                        cout << "No se pudo eliminar el perfil.\n";
+                        cout << "Error al eliminar el perfil.\n";
                     }
                 }
                 break;
             }
             case 3: {
-                Node* usuario = lista.buscar(correoUsuario);
-                if (usuario != nullptr) {
-                    lista.manejarSolicitudes(usuario);
-                } else {
-                    cout << "Usuario no encontrado.\n";
-                }
                 break;
             }
             case 4: {
-                enviarSolicitud(lista, correoUsuario);
                 break;
             }
             case 5: {
-                mostrarMenuPublicaciones(listaDoble, correoUsuario);
+                mostrarMenuPublicaciones(listaDoble, listaCircular, correoUsuario);
                 break;
             }
             case 6: {
-                cout << "Saliendo del menú de usuario." << endl;
+                cout << "Saliendo del menú...\n";
                 break;
             }
             default: {
@@ -338,6 +348,7 @@ void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, const string& cor
 int main() {
     MyList lista;
     DoubleList listaDoble;
+    CircularDoubleList listaCircular;
     int opcion;
     do {
         opcion = mostrarMenu();
@@ -351,10 +362,10 @@ int main() {
 
                 // Validar credenciales
                 if (usuario == ADMIN_USER && password == ADMIN_PASSWORD) {
-                    mostrarMenuAdmin(lista, listaDoble);
+                    mostrarMenuAdmin(lista, listaDoble, listaCircular);
                 } else if (autenticarUsuario(usuario, password, lista)) {
                     string correoUsuario = usuario;
-                    mostrarMenuUsuario(lista, listaDoble, correoUsuario);
+                    mostrarMenuUsuario(lista, listaDoble, listaCircular, correoUsuario);
                 } else {
                     cout << "Credenciales incorrectas. Inténtelo de nuevo.\n";
                 }

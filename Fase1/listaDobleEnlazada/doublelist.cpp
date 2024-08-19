@@ -122,35 +122,30 @@ void DoubleList::printByUser(const string& correoUsuario) const {
 
 //Método para eliminar las publicaciones de un usuario específico
 bool DoubleList::deleteByUser(int position, const string& correoUsuario) {
-    if (position < 0 || position >= size) {
-        return false;
-    }
-
     NodeDoubleList* current = head;
-    for (int actualPosition = 0; actualPosition < position; actualPosition++) {
-        current = current->next;
-    }
-
-    if (current->correo != correoUsuario) {
-        return false; // La publicación no pertenece al usuario
-    }
-
-    // Eliminar el nodo
-    if (current == head) {
-        head = current->next;
-        if (head != nullptr) {
-            head->prev = nullptr;
+    int actualPosition = 0;
+    while (current != nullptr) {
+        if (current->correo == correoUsuario && actualPosition == position) {
+            if (current == head) {
+                head = current->next;
+                if (head != nullptr) {
+                    head->prev = nullptr;
+                }
+            } else if (current == tail) {
+                tail = current->prev;
+                if (tail != nullptr) {
+                    tail->next = nullptr;
+                }
+            } else {
+                current->prev->next = current->next;
+                current->next->prev = current->prev;
+            }
+            delete current;
+            size--;
+            return true;
         }
-    } else if (current == tail) {
-        tail = current->prev;
-        tail->next = nullptr;
-    } else {
-        current->prev->next = current->next;
-        current->next->prev = current->prev;
+        current = current->next;
+        actualPosition++;
     }
-
-    delete current;
-    size--;
-    return true;
+    return false; // No se encontró la publicación
 }
-
