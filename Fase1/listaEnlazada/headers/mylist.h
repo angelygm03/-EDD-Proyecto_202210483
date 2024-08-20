@@ -28,6 +28,9 @@ public:
     // Método para manejar las solicitudes pendientes
     void manejarSolicitudes(Node* usuario);
 
+    // Método para generar el archivo dot
+    void generateDotFile();
+    
 };
 
 #endif

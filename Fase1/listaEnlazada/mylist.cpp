@@ -1,4 +1,6 @@
 #include "headers/mylist.h"
+#include <iostream>
+#include <fstream>
 
 // Constructor inicializa la cabeza de la lista como nula y el tamaño en 0
 MyList::MyList() : head(nullptr), size(0) {}
@@ -127,4 +129,34 @@ void MyList::manejarSolicitudes(Node* usuario) {
     if (!hayPendientes) {
         cout << "No tienes más solicitudes pendientes." << endl;
     }
+}
+
+void MyList::generateDotFile() {
+    ofstream file("reporteUsuarios.dot");
+    if (!file.is_open()) {
+        cout << "No se pudo abrir el archivo para escribir el .dot" << endl;
+        return;
+    }
+
+
+    file << "digraph G {" << endl;
+    file << "rankdir=LR;\n";
+    file << "node [shape=box];\n";
+   
+    Node* current = head;
+    while (current != nullptr) {
+        file << "\"" << current->correo << "\" [label=\"" << current->nombres << " " << current->apellidos << "\\n" << current->correo << "\"];" << endl;
+        if (current->next != nullptr) {
+            file << "\"" << current->correo << "\" -> \"" << current->next->correo << "\";" << endl;
+        }
+        current = current->next;
+    }
+    file << "}" << endl;
+
+
+    file.close();
+   
+    // Convertir el archivo .dot a .png 
+    system("dot -Tpng reporteUsuarios.dot -o reporteUsuarios.png");
+    system("start reporteUsuarios.png");
 }

@@ -145,6 +145,46 @@ int mostrarMenu() {
     return opcion;
 }
 
+void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble) {
+    int opcion;
+    do {
+        cout << "********** MENU REPORTES **********\n";
+        cout << "1. Reporte de usuarios \n";
+        cout << "2. Reporte de relaciones \n";
+        cout << "3. Reporte de publicaciones \n";
+        cout << "4. Salir \n";
+        cout << "Ingrese una opcion: ";
+        cin >> opcion;
+
+
+        switch (opcion) {
+            case 1: {
+                cout << "Generando reporte de usuarios...\n";
+                lista.generateDotFile();
+                break;
+            }
+            case 2: {
+                cout << "********** Reporte de relaciones **********\n";
+                break;
+            }
+            case 3: {
+                cout << "Generando reporte de publicaciones...\n";
+                listaDoble.generateDotFile();
+                break;
+            }
+            case 4: {
+                cout << "Volviendo al menú anterior..." << endl;
+                break;
+            }
+            default: {
+                cout << "Opción no válida. Inténtelo de nuevo.\n";
+                break;
+            }
+        }
+    } while (opcion != 4);
+}
+
+
 void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList& listaCircular) {
     int opcion;
     do {
@@ -157,6 +197,7 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList&
         cout << "6. Salir \n";
         cout << "Ingrese una opcion: ";
         cin >> opcion;
+
 
         switch (opcion) {
             case 1: {
@@ -192,13 +233,7 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList&
                 break;
             }
             case 5: {
-                cout << "********** Reportes **********\n";
-                cout << "Información de usuarios:\n";
-                lista.print();  // Mostrar información de usuarios
-                
-                cout << "\nPublicaciones:\n";
-                listaDoble.print();  // Mostrar publicaciones
-                
+                mostrarMenuReportes(lista, listaDoble);
                 break;
             }
             case 6: {
@@ -210,6 +245,7 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList&
         }
     } while (opcion != 6);
 }
+
 
 void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaCircular, const string& correoUsuario) {
     int opcion;

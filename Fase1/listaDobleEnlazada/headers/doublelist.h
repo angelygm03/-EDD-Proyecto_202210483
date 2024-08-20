@@ -19,7 +19,7 @@ public:
     bool deleteAtPosition(int position);
     void printByUser(const string& correoUsuario) const;
     bool deleteByUser(int position, const string& correoUsuario);
-
+    void generateDotFile();
 };
 
 #endif

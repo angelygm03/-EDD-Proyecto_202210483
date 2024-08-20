@@ -1,4 +1,6 @@
 #include "headers/doublelist.h"
+#include <fstream>
+
 
 // Constructor
 DoubleList::DoubleList() : head(nullptr), tail(nullptr), size(0) {}
@@ -148,4 +150,43 @@ bool DoubleList::deleteByUser(int position, const string& correoUsuario) {
         actualPosition++;
     }
     return false; // No se encontró la publicación
+}
+
+
+//Método para generar un archivo con las publicaciones de un usuario
+void DoubleList::generateDotFile() {
+    ofstream file("reportePublicaciones.dot");
+    if (!file.is_open()) {
+        cout << "No se pudo abrir el archivo para escribir el .dot" << endl;
+        return;
+    }
+
+    file << "digraph G {" << endl;
+    file << "rankdir=LR;\n"; // Layout horizontal
+    file << "node [shape=box];\n";
+
+    NodeDoubleList* current = head;
+    while (current != nullptr) {
+        // Etiqueta de cada nodo con correo, contenido, fecha y hora
+        file << "\"" << current << "\" [label=\""
+             << "Correo: " << current->correo << "\\n"
+             << "Contenido: " << current->contenido << "\\n"
+             << "Fecha: " << current->fecha << "\\n"
+             << "Hora: " << current->hora << "\"];" << endl;
+
+        // Flechas entre los nodos
+        if (current->next != nullptr) {
+            file << "\"" << current << "\" -> \"" << current->next << "\" [dir=both];" << endl;
+        }
+
+        current = current->next;
+    }
+
+    file << "}" << endl;
+
+    file.close();
+
+    // Convertir el archivo .dot a .png 
+    system("dot -Tpng reportePublicaciones.dot -o reportePublicaciones.png");
+    system("start reportePublicaciones.png");
 }
