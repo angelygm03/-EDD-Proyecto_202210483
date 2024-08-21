@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 
+
 // Constructor inicializa la cabeza de la lista como nula y el tamaño en 0
 MyList::MyList() : head(nullptr), size(0) {}
 
@@ -92,10 +93,9 @@ void MyList::manejarSolicitudes(Node* usuario) {
             // Buscar el emisor en la lista de usuarios
             Node* solicitante = buscar(current->emisor);
             if (solicitante != nullptr) {
+                string nombreCompleto = solicitante->nombres + " " + solicitante->apellidos; // Concatenar nombres y apellidos
 
-                string nombreCompleto = solicitante->nombres + " " + solicitante->apellidos; //concatenar nombres y apellidos
-
-                cout <<"--------------- Solicitud de Amistad --------------- \n";
+                cout << "--------------- Solicitud de Amistad --------------- \n";
                 cout << "Nombre: " << nombreCompleto << endl;
                 cout << "Correo: " << solicitante->correo << endl;
             } else {
@@ -116,12 +116,22 @@ void MyList::manejarSolicitudes(Node* usuario) {
                 cout << "Mantenida como pendiente." << endl;
             }
 
-            // Eliminar el nodo procesado de la pila
-            usuario->solicitudes.pop(); 
-            current = usuario->solicitudes.getTop(); // Actualizar el puntero al nuevo nodo superior
+            // Eliminar la solicitud de la lista enlazada del emisor
+            if (solicitante != nullptr) {
+                solicitante->solicitudListEnviadas.eliminarPorEmisorYReceptor(current->emisor, usuario->correo);
+            }
+
+            // Ahora elimina la solicitud de la pila del receptor
+            usuario->solicitudes.pop();
+
+            cout << "Eliminando solicitud de " << current->emisor << " a " << usuario->correo << endl;
+
+
+            // Actualizar el puntero al nuevo nodo superior
+            current = usuario->solicitudes.getTop();
 
         } else {
-            // Si la solicitud no es pendiente se avanza al siguiente nodo sin eliminar el actual
+            // Si la solicitud no es pendiente, se avanza al siguiente nodo sin eliminar el actual
             current = current->next;
         }
     }
@@ -131,6 +141,7 @@ void MyList::manejarSolicitudes(Node* usuario) {
     }
 }
 
+
 void MyList::generateDotFile() {
     ofstream file("reporteUsuarios.dot");
     if (!file.is_open()) {
@@ -138,11 +149,10 @@ void MyList::generateDotFile() {
         return;
     }
 
-
     file << "digraph G {" << endl;
     file << "rankdir=LR;\n";
     file << "node [shape=box];\n";
-   
+
     Node* current = head;
     while (current != nullptr) {
         file << "\"" << current->correo << "\" [label=\"" << current->nombres << " " << current->apellidos << "\\n" << current->correo << "\"];" << endl;
@@ -153,10 +163,30 @@ void MyList::generateDotFile() {
     }
     file << "}" << endl;
 
-
     file.close();
-   
-    // Convertir el archivo .dot a .png 
+
+    // Convertir el archivo .dot a .png automáticamente
     system("dot -Tpng reporteUsuarios.dot -o reporteUsuarios.png");
     system("start reporteUsuarios.png");
+}
+
+// Método para agregar una solicitud a la lista simple del emisor
+void MyList::agregarSolicitudEnviada(const string& emisor, const string& receptor) {
+    Node* usuario = buscar(emisor);
+    if (usuario != nullptr) {
+        usuario->solicitudListEnviadas.insert(emisor, receptor, "PENDIENTE");
+        cout << "Solicitud enviada a " << receptor << " desde " << emisor << endl;
+    } else {
+        cout << "El usuario emisor no se encontró." << endl;
+    }
+}
+
+
+// Método para generar el archivo dot de las solicitudes enviadas
+void MyList::generateSolicitudDotFile(Node* usuario) {
+    if (usuario != nullptr) {
+        usuario->solicitudListEnviadas.generateDotFile("reporteSolicitudes_" + usuario->correo);
+    } else {
+        cout << "Usuario no encontrado para generar reporte de solicitudes." << endl;
+    }
 }

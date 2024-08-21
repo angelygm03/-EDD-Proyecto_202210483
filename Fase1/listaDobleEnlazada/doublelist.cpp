@@ -1,7 +1,6 @@
 #include "headers/doublelist.h"
 #include <fstream>
 
-
 // Constructor
 DoubleList::DoubleList() : head(nullptr), tail(nullptr), size(0) {}
 
@@ -152,7 +151,6 @@ bool DoubleList::deleteByUser(int position, const string& correoUsuario) {
     return false; // No se encontró la publicación
 }
 
-
 //Método para generar un archivo con las publicaciones de un usuario
 void DoubleList::generateDotFile() {
     ofstream file("reportePublicaciones.dot");
@@ -186,7 +184,61 @@ void DoubleList::generateDotFile() {
 
     file.close();
 
-    // Convertir el archivo .dot a .png 
+    // Convertir el archivo .dot a .png automáticamente
     system("dot -Tpng reportePublicaciones.dot -o reportePublicaciones.png");
     system("start reportePublicaciones.png");
+}
+
+
+// Método para obtener e imprimir los 5 usuarios con más publicaciones
+void DoubleList::printTopUsersByPublications() const {
+    const int MAX_USERS = 200;
+    string users[MAX_USERS];
+    int counts[MAX_USERS] = {0};  // Array para contar publicaciones
+    int numUsers = 0;  // Número actual de usuarios únicos
+
+    // Contar publicaciones por usuario
+    NodeDoubleList* current = head;
+    while (current != nullptr) {
+        bool found = false;
+        for (int i = 0; i < numUsers; ++i) {
+            if (users[i] == current->correo) {
+                counts[i]++;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            if (numUsers < MAX_USERS) {
+                users[numUsers] = current->correo;
+                counts[numUsers] = 1;
+                numUsers++;
+            }
+        }
+
+        current = current->next;
+    }
+
+    // Ordenar usuarios por número de publicaciones usando el método de burbuja
+    for (int i = 0; i < numUsers - 1; ++i) {
+        for (int j = 0; j < numUsers - i - 1; ++j) {
+            if (counts[j] < counts[j + 1]) {
+                // Intercambiar conteos
+                int tempCount = counts[j];
+                counts[j] = counts[j + 1];
+                counts[j + 1] = tempCount;
+
+                // Intercambiar usuarios
+                string tempUser = users[j];
+                users[j] = users[j + 1];
+                users[j + 1] = tempUser;
+            }
+        }
+    }
+
+    // Imprimir los 5 usuarios con más publicaciones
+    for (int i = 0; i < 5 && i < numUsers; ++i) {
+        cout << "Usuario: " << users[i] << " Publicaciones: " << counts[i] << endl;
+    }
 }

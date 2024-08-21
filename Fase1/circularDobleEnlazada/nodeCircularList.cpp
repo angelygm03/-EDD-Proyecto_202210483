@@ -5,7 +5,7 @@ NodeCircularList::NodeCircularList() {
     contenido = "";
     fecha = "";
     hora = "";
-    next = this; 
+    next = this;
     prev = this;
 }
 
@@ -14,8 +14,8 @@ NodeCircularList::NodeCircularList(string correo, string contenido, string fecha
     this->contenido = contenido;
     this->fecha = fecha;
     this->hora = hora;
-    next = this; 
-    prev = this; 
+    next = this;
+    prev = this;
 }
 
 void NodeCircularList::print() {

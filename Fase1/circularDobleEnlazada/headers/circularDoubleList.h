@@ -15,6 +15,7 @@ public:
     void insertAtEnd(string correo, string contenido, string fecha, string hora);
     void print() const;
     bool deleteByPosition(int position);
+    void generateDotFile(const string& filename, const string& userCorreo) const;
 };
 
 #endif

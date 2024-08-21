@@ -2,6 +2,7 @@
 #define MYLIST_H
 
 #include "node.h"
+#include "../../solicitudList/headers/solicitudList.h"
 
 // Clase lista enlazada simple
 class MyList {
@@ -30,8 +31,16 @@ public:
 
     // Método para generar el archivo dot
     void generateDotFile();
-    
+
+    // Método para las solicitudes pendientes
+    SolicitudList& getSolicitudList();
+
+    // Método para agregar una solicitud a la lista simple del emisor
+    void agregarSolicitudEnviada(const string& emisor, const string& receptor);
+
+    // Método para generar el archivo dot de las solicitudes enviadas
+    void generateSolicitudDotFile(Node* usuario);
+
 };
 
 #endif
-    

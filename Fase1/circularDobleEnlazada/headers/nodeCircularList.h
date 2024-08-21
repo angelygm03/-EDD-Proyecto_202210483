@@ -18,7 +18,7 @@ public:
     NodeCircularList(); // Constructor por defecto
     NodeCircularList(string correo, string contenido, string fecha, string hora); // Constructor parametrizado
 
-    void print(); // Método para imprimir la información del nodo
+    void print();
 };
 
 #endif

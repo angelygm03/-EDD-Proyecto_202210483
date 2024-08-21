@@ -8,6 +8,7 @@
 #include "pila/headers/stack.h"
 #include "listaDobleEnlazada/headers/doublelist.h"
 #include "circularDobleEnlazada/headers/circularDoubleList.h"
+#include "solicitudList/headers/solicitudList.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -56,6 +57,7 @@ void cargarSolicitudesDesdeJson(const string& filename, MyList& lista) {
             usuario->solicitudes.push(solicitud["emisor"], solicitud["receptor"], solicitud["estado"]);
         }
     }
+    cout << "Solicitudes cargadas exitosamente." << endl;
 }
 
 // Función para cargar publicaciones desde un archivo JSON
@@ -116,9 +118,12 @@ void enviarSolicitud(MyList& lista, const string& correoUsuario) {
         // Insertar la solicitud en la pila del receptor
         destinatario->solicitudes.push(correoUsuario, destinatario->correo, "PENDIENTE");
 
+        // Se agrega la solicitud a la lista simple del emisor
+        lista.agregarSolicitudEnviada(correoUsuario, destinatario->correo);
+
         cout << "Solicitud enviada a " << destinatario->nombres << " " << destinatario->apellidos << " (" << destinatario->correo << ")" << endl;
     } else {
-        cout << "El usuario con el correo " << correoDestino << " no se encontró." << endl;
+        cout << "El usuario con el correo " << correoDestino << " no se encontro." << endl;
     }
 }
 
@@ -152,7 +157,8 @@ void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble) {
         cout << "1. Reporte de usuarios \n";
         cout << "2. Reporte de relaciones \n";
         cout << "3. Reporte de publicaciones \n";
-        cout << "4. Salir \n";
+        cout << "4. Top 5 \n";
+        cout << "5. Salir \n";
         cout << "Ingrese una opcion: ";
         cin >> opcion;
 
@@ -171,7 +177,13 @@ void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble) {
                 listaDoble.generateDotFile();
                 break;
             }
-            case 4: {
+            case 4:{
+                cout << "****************** Top 5 ******************\n";
+                cout << "Usuarios con más publicaciones \n";
+                listaDoble.printTopUsersByPublications();
+                break;
+            }
+            case 5: {
                 cout << "Volviendo al menú anterior..." << endl;
                 break;
             }
@@ -206,7 +218,7 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList&
             }
             case 2: {
                 string filename;
-                cout << "Ingrese el nombre del archivo JSON: ";
+                cout << "Ingrese el nombre del archivo JSON:  ";
                 cin >> filename;
                 cargarSolicitudesDesdeJson(filename, lista);
                 break;
@@ -317,9 +329,49 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaC
     } while (opcion != 4);
 }
 
+void mostrarMenuReportesUsuario(MyList& lista, const string& correoUsuario, CircularDoubleList& listaCircular ) {
+    int opcion;
+    do {
+        cout << "********** MENU REPORTES USUARIO **********\n";
+        cout << "1. Reporte de solicitudes \n";
+        cout << "2. Publicaciones\n";
+        cout << "3. Amigos \n";
+        cout << "4. Volver al menu anterior \n";
+        cout << "Ingrese una opcion: ";
+        cin >> opcion;
 
+        switch (opcion) {
+            case 1: {
+                Node* usuario = lista.buscar(correoUsuario);
+                if (usuario != nullptr) {
+                    usuario->solicitudes.generateDotFile("reporteUsuarios", usuario->correo);
+                    cout << "Generando reportes...\n";
+                }
+                lista.generateSolicitudDotFile(usuario);
+                break;
+            }
+            case 2: {
+                cout << "Generando reporte de publicaciones...\n";
+                listaCircular.generateDotFile("reportePublicaciones.dot", correoUsuario);
+                break;
+            }
+            case 3: {
+                cout << "Generando reporte de amigos...\n";
+                break;
+            }
+            case 4: {
+                cout << "Volviendo al menú anterior...\n";
+                break;
+            }
+            default: {
+                cout << "Opción no válida. Inténtelo de nuevo.\n";
+                break;
+            }
+        }
+    } while (opcion != 4);
+}
 
-void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleList& listaCircular, const string& correoUsuario) {
+void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleList& listaCircular, const string& correoUsuario, SolicitudList& solicitudList) {
     int opcion;
     do {
         cout << "********** MENU USUARIO **********\n";
@@ -375,12 +427,7 @@ void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleLis
                 break;
             }
             case 6:{
-                Node* usuario = lista.buscar(correoUsuario);
-                if (usuario != nullptr) {
-                    usuario->solicitudes.generateDotFile("reporteSolicitudes", usuario->correo);
-                    cout << "Generando reporte de usuarios...\n";
-                }
-                mostrarMenuUsuario(lista, listaDoble, listaCircular, correoUsuario);
+                mostrarMenuReportesUsuario(lista, correoUsuario, listaCircular);
                 break;
             }
             case 7: {
@@ -399,6 +446,8 @@ int main() {
     MyList lista;
     DoubleList listaDoble;
     CircularDoubleList listaCircular;
+    SolicitudList solicitudList;
+
     int opcion;
     do {
         opcion = mostrarMenu();
@@ -415,7 +464,7 @@ int main() {
                     mostrarMenuAdmin(lista, listaDoble, listaCircular);
                 } else if (autenticarUsuario(usuario, password, lista)) {
                     string correoUsuario = usuario;
-                    mostrarMenuUsuario(lista, listaDoble, listaCircular, correoUsuario);
+                    mostrarMenuUsuario(lista, listaDoble, listaCircular, correoUsuario, solicitudList);
                 } else {
                     cout << "Credenciales incorrectas. Inténtelo de nuevo.\n";
                 }

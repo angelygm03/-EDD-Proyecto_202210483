@@ -20,6 +20,7 @@ public:
     void printByUser(const string& correoUsuario) const;
     bool deleteByUser(int position, const string& correoUsuario);
     void generateDotFile();
+    void printTopUsersByPublications() const;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "../../pila/headers/stack.h"
+#include "../../solicitudList/headers/solicitudList.h"
 using namespace std;
 
 class Node {
@@ -13,7 +14,8 @@ public:
     string fechaNacimiento;
     string correo;
     string contrasena;
-    Stack solicitudes;  // Pila de solicitudes
+    Stack solicitudes;  // Pila de solicitudes recibidas
+    SolicitudList solicitudListEnviadas; // Lista de solicitudes enviadas
     Node* next;
 
     Node();

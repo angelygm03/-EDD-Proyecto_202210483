@@ -1,4 +1,5 @@
 #include "headers/circularDoubleList.h"
+#include <fstream>
 
 CircularDoubleList::CircularDoubleList() : head(nullptr), tail(nullptr), size(0) {}
 
@@ -69,4 +70,63 @@ bool CircularDoubleList::deleteByPosition(int position) {
 
     size--;
     return true;
+}
+
+void CircularDoubleList::generateDotFile(const string& filename, const string& userCorreo) const {
+    ofstream archivo(filename);
+    if (!archivo.is_open()) {
+        cout << "No se pudo abrir el archivo " << filename << endl;
+        return;
+    }
+
+    archivo << "digraph G {\n";
+    archivo << "  rankdir=LR;\n";  // Para una representación horizontal
+    archivo << "  node [shape=record, height=.1];\n";
+
+    if (head != nullptr) {
+        NodeCircularList* current = head;
+        NodeCircularList* firstNode = nullptr;
+        NodeCircularList* lastNode = nullptr;
+        bool found = false;
+        int nodeCount = 0;
+
+        // Crear los nodos
+        do {
+            if (current->correo == userCorreo) {
+                archivo << "node" << nodeCount << " [label=\"{<f1>|Correo: " << current->correo
+                        << "\\nContenido: " << current->contenido
+                        << "\\nFecha: " << current->fecha
+                        << "\\nHora: " << current->hora << "|<f2>}\"];\n";
+                if (firstNode == nullptr) {
+                    firstNode = current;
+                }
+                lastNode = current;
+                found = true;
+                nodeCount++;
+            }
+            current = current->next;
+        } while (current != head);
+
+        if (!found) {
+            archivo << "  \"NoPublicaciones\" [label=\"No hay publicaciones para este usuario\"];\n";
+        } else {
+            // Crear las conexiones entre nodos adyacentes
+            for (int i = 0; i < nodeCount - 1; ++i) {
+                archivo << "node" << i << ":f2 -> node" << i + 1 << ":f1 [dir=both];\n";
+            }
+            // Conexión bidireccional entre el primer y el último nodo
+            archivo << "node" << nodeCount - 1 << ":f2 -> node0:f1 [dir=both];\n";
+        }
+    }
+    archivo << "}\n";
+    archivo.close();
+    cout << "Archivo DOT generado correctamente." << endl;
+
+    // Convertir el archivo .dot a .png automáticamente
+    string command = "dot -Tpng " + filename + " -o " + filename.substr(0, filename.find_last_of('.')) + ".png";
+    std::system(command.c_str());
+
+    // Abrir el archivo .png generado
+    command = "start " + filename.substr(0, filename.find_last_of('.')) + ".png";
+    system(command.c_str());
 }
