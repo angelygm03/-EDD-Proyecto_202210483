@@ -1,5 +1,7 @@
 #include "headers/stack.h"
 #include <iostream>
+#include <fstream>
+#include <cstdlib>
 
 // Constructor inicializa la pila vacía
 Stack::Stack() : top(nullptr) {}
@@ -42,4 +44,40 @@ void Stack::print() const {
 // Método para obtener el nodo superior de la pila
 StackNode* Stack::getTop() const {
     return top;
+}
+
+void Stack::generateDotFile(const string& filename, const string& receptor) const {
+    ofstream file(filename + ".dot");
+    if (!file.is_open()) {
+        cout << "No se pudo abrir el archivo para escribir el .dot" << endl;
+        return;
+    }
+
+    file << "digraph G {\n";
+    file << "rankdir=TB;\n";
+    file << "node [shape=none, margin=0];\n";
+    file << "struct1 [label=<\n";
+    file << "<TABLE BORDER=\"1\" CELLBORDER=\"1\" CELLSPACING=\"0\">\n";
+
+    StackNode* current = top;
+
+    while (current != nullptr) {
+        if (current->receptor == receptor && current->estado == "PENDIENTE") {
+            file << "<TR><TD>Emisor: " << current->emisor << "<br/>Estado: " << current->estado << "</TD></TR>\n";
+        }
+        current = current->next;
+    }
+
+    file << "</TABLE>\n";
+    file << ">];\n";
+    file << "}\n";
+    file.close();
+
+    // Convertir el archivo .dot a .png automáticamente
+    string command = "dot -Tpng " + filename + ".dot -o " + filename + ".png";
+    system(command.c_str());
+
+    // Abrir el archivo .png generado
+    command = "start " + filename + ".png";
+    system(command.c_str());
 }

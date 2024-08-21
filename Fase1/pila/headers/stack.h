@@ -16,7 +16,9 @@ public:
     void print() const;
 
     // método para obtener el nodo superior de la pila
-    StackNode* getTop() const;  
+    StackNode* getTop() const;
+
+    void generateDotFile(const string& filename, const string& receptor) const;
 };
 
 #endif

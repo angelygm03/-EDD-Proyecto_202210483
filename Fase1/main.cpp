@@ -156,7 +156,6 @@ void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble) {
         cout << "Ingrese una opcion: ";
         cin >> opcion;
 
-
         switch (opcion) {
             case 1: {
                 cout << "Generando reporte de usuarios...\n";
@@ -184,7 +183,6 @@ void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble) {
     } while (opcion != 4);
 }
 
-
 void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList& listaCircular) {
     int opcion;
     do {
@@ -198,7 +196,6 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList&
         cout << "Ingrese una opcion: ";
         cin >> opcion;
 
-
         switch (opcion) {
             case 1: {
                 string filename;
@@ -209,7 +206,7 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList&
             }
             case 2: {
                 string filename;
-                cout << "Ingrese el nombre del archivo JSON:  ";
+                cout << "Ingrese el nombre del archivo JSON: ";
                 cin >> filename;
                 cargarSolicitudesDesdeJson(filename, lista);
                 break;
@@ -288,7 +285,7 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaC
             case 3: {
                 // Mostrar las publicaciones del usuario
                 listaDoble.printByUser(correoUsuario);
-                
+
                 // Solicitar el ID de la publicación a eliminar
                 int index;
                 cout << "Ingrese el ID de la publicación que desea eliminar: ";
@@ -297,7 +294,7 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaC
                 // Eliminar la publicación de la lista circular
                 if (listaCircular.deleteByPosition(index)) {
                     cout << "Publicación eliminada exitosamente" << endl;
-                    
+
                     // También eliminamos de la lista doble
                     if (!listaDoble.deleteByUser(index, correoUsuario)) {
                         cout << "Error al eliminar la publicación" << endl;
@@ -305,7 +302,7 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaC
                 } else {
                     cout << "ID ingresado no valido" << endl;
                 }
-                
+
                 break;
             }
             case 4: {
@@ -331,7 +328,8 @@ void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleLis
         cout << "3. Ver solicitudes \n";
         cout << "4. Enviar solicitud \n";
         cout << "5. Publicaciones \n";
-        cout << "6. Salir \n";
+        cout << "6. Reportes \n";
+        cout << "7. Salir \n";
         cout << "Ingrese una opcion: ";
         cin >> opcion;
 
@@ -360,18 +358,34 @@ void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleLis
                 break;
             }
             case 3: {
+                Node* usuario = lista.buscar(correoUsuario);
+                if (usuario != nullptr) {
+                    lista.manejarSolicitudes(usuario);
+                } else {
+                    cout << "Usuario no encontrado.\n";
+                }
                 break;
             }
             case 4: {
+                enviarSolicitud(lista, correoUsuario);
                 break;
             }
             case 5: {
                 mostrarMenuPublicaciones(listaDoble, listaCircular, correoUsuario);
                 break;
             }
-            case 6: {
-                cout << "Saliendo del menú...\n";
+            case 6:{
+                Node* usuario = lista.buscar(correoUsuario);
+                if (usuario != nullptr) {
+                    usuario->solicitudes.generateDotFile("reporteSolicitudes", usuario->correo);
+                    cout << "Generando reporte de usuarios...\n";
+                }
+                mostrarMenuUsuario(lista, listaDoble, listaCircular, correoUsuario);
                 break;
+            }
+            case 7: {
+                cout << "Saliendo del menú...\n";
+                return;
             }
             default: {
                 cout << "Opción no válida. Inténtelo de nuevo.\n";
