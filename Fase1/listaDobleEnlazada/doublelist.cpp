@@ -59,7 +59,7 @@ void DoubleList::insertAtPosition(int givenPosition, string correo, string conte
 // Imprime la lista completa
 void DoubleList::print() const {
     if (head == nullptr) {
-        cout << "La lista está vacía." << endl;
+        cout << "La lista esta vacia." << endl;
         return;
     }
 

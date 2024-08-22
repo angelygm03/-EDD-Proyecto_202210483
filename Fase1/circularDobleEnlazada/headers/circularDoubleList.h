@@ -16,6 +16,8 @@ public:
     void print() const;
     bool deleteByPosition(int position);
     void generateDotFile(const string& filename, const string& userCorreo) const;
+    void showPostsWithNavigation();  // Método para anterior y siguiente
+
 };
 
 #endif

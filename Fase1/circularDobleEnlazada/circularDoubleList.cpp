@@ -22,7 +22,7 @@ void CircularDoubleList::insertAtEnd(string correo, string contenido, string fec
 
 void CircularDoubleList::print() const {
     if (head == nullptr) {
-        cout << "La lista circular está vacía." << endl;
+        cout << "La lista circular esta vacia." << endl;
         return;
     }
 
@@ -80,7 +80,7 @@ void CircularDoubleList::generateDotFile(const string& filename, const string& u
     }
 
     archivo << "digraph G {\n";
-    archivo << "  rankdir=LR;\n";  // Para una representación horizontal
+    archivo << "  rankdir=LR;\n";
     archivo << "  node [shape=record, height=.1];\n";
 
     if (head != nullptr) {
@@ -120,7 +120,7 @@ void CircularDoubleList::generateDotFile(const string& filename, const string& u
     }
     archivo << "}\n";
     archivo.close();
-    cout << "Archivo DOT generado correctamente." << endl;
+    cout << "Archivo generado correctamente." << endl;
 
     // Convertir el archivo .dot a .png automáticamente
     string command = "dot -Tpng " + filename + " -o " + filename.substr(0, filename.find_last_of('.')) + ".png";
@@ -129,4 +129,27 @@ void CircularDoubleList::generateDotFile(const string& filename, const string& u
     // Abrir el archivo .png generado
     command = "start " + filename.substr(0, filename.find_last_of('.')) + ".png";
     system(command.c_str());
+}
+
+//Método para mostras las publicaciones con anterior y siguiente
+void CircularDoubleList::showPostsWithNavigation() {
+    if (head == nullptr) {
+        cout << "No hay publicaciones para mostrar." << endl;
+        return;
+    }
+
+    NodeCircularList* current = head;
+    char option;
+
+    do {
+        current->print();
+        cout << "\nIngrese 's' para siguiente, 'a' para anterior, 'e' para salir: ";
+        cin >> option;
+
+        if (option == 's') {
+            current = current->next;
+        } else if (option == 'a') {
+            current = current->prev;
+        }
+    } while (option != 'e');
 }

@@ -124,9 +124,6 @@ void MyList::manejarSolicitudes(Node* usuario) {
             // Ahora elimina la solicitud de la pila del receptor
             usuario->solicitudes.pop();
 
-            cout << "Eliminando solicitud de " << current->emisor << " a " << usuario->correo << endl;
-
-
             // Actualizar el puntero al nuevo nodo superior
             current = usuario->solicitudes.getTop();
 
@@ -137,7 +134,7 @@ void MyList::manejarSolicitudes(Node* usuario) {
     }
 
     if (!hayPendientes) {
-        cout << "No tienes más solicitudes pendientes." << endl;
+        cout << "No tienes mas solicitudes pendientes." << endl;
     }
 }
 
@@ -175,9 +172,8 @@ void MyList::agregarSolicitudEnviada(const string& emisor, const string& recepto
     Node* usuario = buscar(emisor);
     if (usuario != nullptr) {
         usuario->solicitudListEnviadas.insert(emisor, receptor, "PENDIENTE");
-        cout << "Solicitud enviada a " << receptor << " desde " << emisor << endl;
     } else {
-        cout << "El usuario emisor no se encontró." << endl;
+        cout << "El usuario emisor no se encontro." << endl;
     }
 }
 

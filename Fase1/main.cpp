@@ -179,16 +179,16 @@ void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble) {
             }
             case 4:{
                 cout << "****************** Top 5 ******************\n";
-                cout << "Usuarios con más publicaciones \n";
+                cout << "Usuarios con mas publicaciones \n";
                 listaDoble.printTopUsersByPublications();
                 break;
             }
             case 5: {
-                cout << "Volviendo al menú anterior..." << endl;
-                break;
+                cout << "Volviendo al menu anterior..." << endl;
+                return;
             }
             default: {
-                cout << "Opción no válida. Inténtelo de nuevo.\n";
+                cout << "Opción no valida. Intentelo de nuevo.\n";
                 break;
             }
         }
@@ -218,7 +218,7 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList&
             }
             case 2: {
                 string filename;
-                cout << "Ingrese el nombre del archivo JSON:  ";
+                cout << "Ingrese el nombre del archivo JSON: ";
                 cin >> filename;
                 cargarSolicitudesDesdeJson(filename, lista);
                 break;
@@ -269,13 +269,12 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaC
 
         switch (opcion) {
             case 1: {
-                // Mostrar todas las publicaciones
-                listaDoble.print();
+                listaCircular.showPostsWithNavigation();
                 break;
             }
             case 2: {
                 string textoPublicacion;
-                cout << "Escriba aquí: \n";
+                cout << "Escriba aqui: \n";
                 cin.ignore();  // Limpiar el buffer
                 getline(cin, textoPublicacion);  // Obtener la publicación como una línea completa de texto
 
@@ -291,7 +290,7 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaC
                 // Agregar la publicación a la lista circular
                 listaCircular.insertAtEnd(correoUsuario, textoPublicacion, fecha, hora);
 
-                cout << "Publicación creada" << endl;
+                cout << "Publicacion creada" << endl;
                 break;
             }
             case 3: {
@@ -300,16 +299,16 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaC
 
                 // Solicitar el ID de la publicación a eliminar
                 int index;
-                cout << "Ingrese el ID de la publicación que desea eliminar: ";
+                cout << "Ingrese el ID de la publicacion que desea eliminar: ";
                 cin >> index;
 
                 // Eliminar la publicación de la lista circular
                 if (listaCircular.deleteByPosition(index)) {
-                    cout << "Publicación eliminada exitosamente" << endl;
+                    cout << "Publicacion eliminada exitosamente" << endl;
 
                     // También eliminamos de la lista doble
                     if (!listaDoble.deleteByUser(index, correoUsuario)) {
-                        cout << "Error al eliminar la publicación" << endl;
+                        cout << "Error al eliminar la publicacion" << endl;
                     }
                 } else {
                     cout << "ID ingresado no valido" << endl;
@@ -318,58 +317,17 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaC
                 break;
             }
             case 4: {
-                cout << "Volviendo al menú..." << endl;
+                cout << "Volviendo al menu..." << endl;
                 break;
             }
             default: {
-                cout << "Opción no válida. Inténtelo de nuevo.\n";
+                cout << "Opcion no valida. Intentelo de nuevo.\n";
                 break;
             }
         }
     } while (opcion != 4);
 }
 
-void mostrarMenuReportesUsuario(MyList& lista, const string& correoUsuario, CircularDoubleList& listaCircular ) {
-    int opcion;
-    do {
-        cout << "********** MENU REPORTES USUARIO **********\n";
-        cout << "1. Reporte de solicitudes \n";
-        cout << "2. Publicaciones\n";
-        cout << "3. Amigos \n";
-        cout << "4. Volver al menu anterior \n";
-        cout << "Ingrese una opcion: ";
-        cin >> opcion;
-
-        switch (opcion) {
-            case 1: {
-                Node* usuario = lista.buscar(correoUsuario);
-                if (usuario != nullptr) {
-                    usuario->solicitudes.generateDotFile("reporteUsuarios", usuario->correo);
-                    cout << "Generando reportes...\n";
-                }
-                lista.generateSolicitudDotFile(usuario);
-                break;
-            }
-            case 2: {
-                cout << "Generando reporte de publicaciones...\n";
-                listaCircular.generateDotFile("reportePublicaciones.dot", correoUsuario);
-                break;
-            }
-            case 3: {
-                cout << "Generando reporte de amigos...\n";
-                break;
-            }
-            case 4: {
-                cout << "Volviendo al menú anterior...\n";
-                break;
-            }
-            default: {
-                cout << "Opción no válida. Inténtelo de nuevo.\n";
-                break;
-            }
-        }
-    } while (opcion != 4);
-}
 
 void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleList& listaCircular, const string& correoUsuario, SolicitudList& solicitudList) {
     int opcion;
@@ -396,7 +354,7 @@ void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleLis
                 break;
             }
             case 2: {
-                cout << "¿Está seguro de que desea eliminar su perfil? (s/n): ";
+                cout << "¿Esta seguro de que desea eliminar su perfil? (s/n): ";
                 char confirmacion;
                 cin >> confirmacion;
                 if (confirmacion == 's' || confirmacion == 'S') {
@@ -427,20 +385,64 @@ void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleLis
                 break;
             }
             case 6:{
-                mostrarMenuReportesUsuario(lista, correoUsuario, listaCircular);
+                mostrarMenuReportesUsuario(lista, listaDoble, correoUsuario, listaCircular, solicitudList);
                 break;
             }
             case 7: {
-                cout << "Saliendo del menú...\n";
+                cout << "Saliendo del menu...\n";
                 return;
             }
             default: {
-                cout << "Opción no válida. Inténtelo de nuevo.\n";
+                cout << "Opcion no valida. Intentelo de nuevo.\n";
                 break;
             }
         }
     } while (opcion != 6);
 }
+
+void mostrarMenuReportesUsuario(MyList& lista, DoubleList& listaDoble, const string& correoUsuario, CircularDoubleList& listaCircular, SolicitudList& solicitudList) {
+    int opcion;
+    do {
+        cout << "********** MENU REPORTES USUARIO **********\n";
+        cout << "1. Reporte de solicitudes \n";
+        cout << "2. Publicaciones\n";
+        cout << "3. Amigos \n";
+        cout << "4. Volver al menu anterior \n";
+        cout << "Ingrese una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: {
+                Node* usuario = lista.buscar(correoUsuario);
+                if (usuario != nullptr) {
+                    usuario->solicitudes.generateDotFile("reporteUsuarios", usuario->correo);
+                    cout << "Generando reportes...\n";
+                }
+                lista.generateSolicitudDotFile(usuario);
+                break;
+            }
+            case 2: {
+                cout << "Generando reporte de publicaciones...\n";
+                listaCircular.generateDotFile("reportePublicaciones.dot", correoUsuario);
+                break;
+            }
+            case 3: {
+                cout << "Generando reporte de amigos...\n";
+                break;
+            }
+            case 4: {
+                cout << "Volviendo al menu anterior...\n";
+                mostrarMenuUsuario(lista, listaDoble, listaCircular, correoUsuario, solicitudList);
+                break;
+            }
+            default: {
+                cout << "Opcion no valida. Intentelo de nuevo.\n";
+                break;
+            }
+        }
+    } while (opcion != 4);
+}
+
 
 int main() {
     MyList lista;
@@ -466,7 +468,7 @@ int main() {
                     string correoUsuario = usuario;
                     mostrarMenuUsuario(lista, listaDoble, listaCircular, correoUsuario, solicitudList);
                 } else {
-                    cout << "Credenciales incorrectas. Inténtelo de nuevo.\n";
+                    cout << "Credenciales incorrectas. Intentelo de nuevo.\n";
                 }
                 break;
             }
