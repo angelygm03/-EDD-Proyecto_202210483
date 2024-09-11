@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AdminWindow</class>
+ <widget class="QMainWindow" name="AdminWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>160</y>
+      <width>291</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>window admin</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>20</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cerrar sesión</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuCarga_masiva">
+    <property name="title">
+     <string>Carga masiva</string>
+    </property>
+    <addaction name="actionCargar_usuarios"/>
+    <addaction name="actionCargar_solicitudes"/>
+    <addaction name="actionCargarPublicaciones"/>
+   </widget>
+   <widget class="QMenu" name="menuReportes">
+    <property name="title">
+     <string>Reportes</string>
+    </property>
+    <addaction name="actionUsuarios"/>
+    <addaction name="actionPublicaciones"/>
+   </widget>
+   <widget class="QMenu" name="menuBuscar">
+    <property name="title">
+     <string>Buscar</string>
+    </property>
+   </widget>
+   <addaction name="menuCarga_masiva"/>
+   <addaction name="menuReportes"/>
+   <addaction name="menuBuscar"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionCargar_usuarios">
+   <property name="text">
+    <string>Cargar usuarios</string>
+   </property>
+  </action>
+  <action name="actionCargar_solicitudes">
+   <property name="text">
+    <string>Cargar solicitudes</string>
+   </property>
+  </action>
+  <action name="actionCargarPublicaciones">
+   <property name="text">
+    <string>Cargar publicaciones</string>
+   </property>
+  </action>
+  <action name="actionUsuarios">
+   <property name="text">
+    <string>Reporte usuarios</string>
+   </property>
+  </action>
+  <action name="actionPublicaciones">
+   <property name="text">
+    <string>Reporte publicaciones</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
