@@ -1,5 +1,6 @@
 #include "headers/doublelist.h"
 #include <fstream>
+#include <set>
 
 // Constructor
 DoubleList::DoubleList() : head(nullptr), tail(nullptr), size(0) {}

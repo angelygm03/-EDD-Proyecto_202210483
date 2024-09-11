@@ -109,6 +109,12 @@ void MyList::manejarSolicitudes(Node* usuario) {
             if (decision == 's' || decision == 'S') {
                 current->estado = "ACEPTADA";
                 cout << "Solicitud aceptada." << endl;
+
+                // Agregar la relación de amistad en la matriz dispersa
+                matrix.insertarRelacion(usuario, solicitante);
+                matrix.insertarRelacion(solicitante, usuario);  // Relación bidireccional
+                cout << "Ahora son amigos." << endl;
+
             } else if (decision == 'n' || decision == 'N') {
                 current->estado = "RECHAZADA";
                 cout << "Solicitud rechazada." << endl;
@@ -138,6 +144,9 @@ void MyList::manejarSolicitudes(Node* usuario) {
     }
 }
 
+void MyList:: reporteAmistad() {
+    matrix.generateDotFile("relacionesAmistad");
+}
 
 void MyList::generateDotFile() {
     ofstream file("reporteUsuarios.dot");

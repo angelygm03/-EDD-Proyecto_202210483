@@ -9,6 +9,7 @@
 #include "listaDobleEnlazada/headers/doublelist.h"
 #include "circularDobleEnlazada/headers/circularDoubleList.h"
 #include "solicitudList/headers/solicitudList.h"
+#include "matrix/matrix.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -32,7 +33,7 @@ void cargarDesdeJson(const string& filename, MyList& lista) {
         lista.insert(
             usuario["nombres"],
             usuario["apellidos"],
-            usuario["fecha de nacimiento"],
+            usuario["fecha_de_nacimiento"],
             usuario["correo"],
             usuario["contraseña"]
         );
@@ -41,7 +42,7 @@ void cargarDesdeJson(const string& filename, MyList& lista) {
 }
 
 // Función para cargar y mostrar las solicitudes desde un archivo JSON
-void cargarSolicitudesDesdeJson(const string& filename, MyList& lista) {
+void cargarSolicitudesDesdeJson(const string& filename, MyList& lista, Matrix& matrix) {
     ifstream archivo(filename);
     if (!archivo.is_open()) {
         cout << "No se pudo abrir el archivo " << filename << endl;
@@ -52,13 +53,29 @@ void cargarSolicitudesDesdeJson(const string& filename, MyList& lista) {
     archivo >> solicitudes;
 
     for (const auto& solicitud : solicitudes) {
-        Node* usuario = lista.buscar(solicitud["receptor"]);
-        if (usuario != nullptr) {
-            usuario->solicitudes.push(solicitud["emisor"], solicitud["receptor"], solicitud["estado"]);
+        string emisorCorreo = solicitud["emisor"];
+        string receptorCorreo = solicitud["receptor"];
+        string estado = solicitud["estado"];
+
+        Node* emisor = lista.buscar(emisorCorreo);
+        Node* receptor = lista.buscar(receptorCorreo);
+
+        if (emisor != nullptr && receptor != nullptr) {
+            if (estado == "ACEPTADA") {
+                matrix.insertarRelacion(emisor, receptor);
+                matrix.insertarRelacion(receptor, emisor);  // Relación bidireccional
+
+            } else if (estado == "PENDIENTE") {
+                receptor->solicitudes.push(emisorCorreo, receptorCorreo, estado);
+            }
+        } else {
+            cout << "No se encontró uno de los usuarios: " << emisorCorreo << " o " << receptorCorreo << endl;
         }
     }
+
     cout << "Solicitudes cargadas exitosamente." << endl;
 }
+
 
 // Función para cargar publicaciones desde un archivo JSON
 void cargarPublicacionesDesdeJson(const string& filename, DoubleList& listaDoble, CircularDoubleList& listaCircular) {
@@ -150,7 +167,7 @@ int mostrarMenu() {
     return opcion;
 }
 
-void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble) {
+void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble, Matrix& matrix) {
     int opcion;
     do {
         cout << "********** MENU REPORTES **********\n";
@@ -169,7 +186,8 @@ void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble) {
                 break;
             }
             case 2: {
-                cout << "********** Reporte de relaciones **********\n";
+                cout <<"Generando reporte de relaciones de amistad...\ns";
+                matrix.generateDotFile("matrizDispersa");
                 break;
             }
             case 3: {
@@ -181,6 +199,9 @@ void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble) {
                 cout << "****************** Top 5 ******************\n";
                 cout << "Usuarios con mas publicaciones \n";
                 listaDoble.printTopUsersByPublications();
+                cout << "****************** Top 5 ******************\n";
+                cout << "Usuarios con menos amigos \n";
+                matrix.top5MenosAmigos();
                 break;
             }
             case 5: {
@@ -196,6 +217,7 @@ void mostrarMenuReportes(MyList& lista, DoubleList& listaDoble) {
 }
 
 void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList& listaCircular) {
+    Matrix matrix; 
     int opcion;
     do {
         cout << "********** MENU ADMINISTRADOR **********\n";
@@ -220,7 +242,7 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList&
                 string filename;
                 cout << "Ingrese el nombre del archivo JSON: ";
                 cin >> filename;
-                cargarSolicitudesDesdeJson(filename, lista);
+                cargarSolicitudesDesdeJson(filename, lista, matrix);
                 break;
             }
             case 3: {
@@ -242,7 +264,7 @@ void mostrarMenuAdmin(MyList& lista, DoubleList& listaDoble, CircularDoubleList&
                 break;
             }
             case 5: {
-                mostrarMenuReportes(lista, listaDoble);
+                mostrarMenuReportes(lista, listaDoble, matrix);
                 break;
             }
             case 6: {
@@ -328,6 +350,52 @@ void mostrarMenuPublicaciones(DoubleList& listaDoble, CircularDoubleList& listaC
     } while (opcion != 4);
 }
 
+void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleList& listaCircular, const std::string& correoUsuario, SolicitudList& solicitudList);
+
+
+void mostrarMenuReportesUsuario(MyList& lista, DoubleList& listaDoble, const string& correoUsuario, CircularDoubleList& listaCircular, SolicitudList& solicitudList) {
+    int opcion;
+    do {
+        cout << "********** MENU REPORTES USUARIO **********\n";
+        cout << "1. Reporte de solicitudes \n";
+        cout << "2. Publicaciones\n";
+        cout << "3. Amigos \n";
+        cout << "4. Volver al menu anterior \n";
+        cout << "Ingrese una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: {
+                Node* usuario = lista.buscar(correoUsuario);
+                if (usuario != nullptr) {
+                    usuario->solicitudes.generateDotFile("reporteUsuarios", usuario->correo);
+                    cout << "Generando reportes...\n";
+                }
+                lista.generateSolicitudDotFile(usuario);
+                break;
+            }
+            case 2: {
+                cout << "Generando reporte de publicaciones...\n";
+                listaCircular.generateDotFile("reportePublicaciones.dot", correoUsuario);
+                break;
+            }
+            case 3: {
+                cout << "Generando reporte de amigos...\n";
+                lista.matrix.generateDotFile("reporteAmigos");
+                break;
+            }
+            case 4: {
+                cout << "Volviendo al menu anterior...\n";
+                mostrarMenuUsuario(lista, listaDoble, listaCircular, correoUsuario, solicitudList);
+                break;
+            }
+            default: {
+                cout << "Opcion no valida. Intentelo de nuevo.\n";
+                break;
+            }
+        }
+    } while (opcion != 4);
+}
 
 void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleList& listaCircular, const string& correoUsuario, SolicitudList& solicitudList) {
     int opcion;
@@ -400,56 +468,12 @@ void mostrarMenuUsuario(MyList& lista, DoubleList& listaDoble, CircularDoubleLis
     } while (opcion != 6);
 }
 
-void mostrarMenuReportesUsuario(MyList& lista, DoubleList& listaDoble, const string& correoUsuario, CircularDoubleList& listaCircular, SolicitudList& solicitudList) {
-    int opcion;
-    do {
-        cout << "********** MENU REPORTES USUARIO **********\n";
-        cout << "1. Reporte de solicitudes \n";
-        cout << "2. Publicaciones\n";
-        cout << "3. Amigos \n";
-        cout << "4. Volver al menu anterior \n";
-        cout << "Ingrese una opcion: ";
-        cin >> opcion;
-
-        switch (opcion) {
-            case 1: {
-                Node* usuario = lista.buscar(correoUsuario);
-                if (usuario != nullptr) {
-                    usuario->solicitudes.generateDotFile("reporteUsuarios", usuario->correo);
-                    cout << "Generando reportes...\n";
-                }
-                lista.generateSolicitudDotFile(usuario);
-                break;
-            }
-            case 2: {
-                cout << "Generando reporte de publicaciones...\n";
-                listaCircular.generateDotFile("reportePublicaciones.dot", correoUsuario);
-                break;
-            }
-            case 3: {
-                cout << "Generando reporte de amigos...\n";
-                break;
-            }
-            case 4: {
-                cout << "Volviendo al menu anterior...\n";
-                mostrarMenuUsuario(lista, listaDoble, listaCircular, correoUsuario, solicitudList);
-                break;
-            }
-            default: {
-                cout << "Opcion no valida. Intentelo de nuevo.\n";
-                break;
-            }
-        }
-    } while (opcion != 4);
-}
-
-
 int main() {
     MyList lista;
     DoubleList listaDoble;
     CircularDoubleList listaCircular;
     SolicitudList solicitudList;
-
+    
     int opcion;
     do {
         opcion = mostrarMenu();

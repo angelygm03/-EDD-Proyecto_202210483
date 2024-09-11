@@ -117,4 +117,3 @@ Social Structure está diseñado para manejar posibles errores de importación d
 
 
 
-

@@ -1,0 +1,7 @@
+digraph G {
+rankdir=LR;
+    node [shape=box];
+    "miguel.rodriguez@example.com";
+    "jose.garcia@example.com";
+    "miguel.rodriguez@example.com" -> "jose.garcia@example.com";
+}

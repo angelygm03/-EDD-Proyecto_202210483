@@ -1,5 +1,6 @@
 #include "headers/nodeCircularList.h"
 
+//constructor por defecto
 NodeCircularList::NodeCircularList() {
     correo = "";
     contenido = "";
@@ -9,6 +10,7 @@ NodeCircularList::NodeCircularList() {
     prev = this;
 }
 
+//constructor parametrizado
 NodeCircularList::NodeCircularList(string correo, string contenido, string fecha, string hora) {
     this->correo = correo;
     this->contenido = contenido;

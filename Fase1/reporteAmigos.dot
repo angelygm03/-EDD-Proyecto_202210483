@@ -1,0 +1,9 @@
+digraph G {
+graph [pad="0.5", nodesep="1", ranksep="1"];
+node [shape=box, height=0.8];
+"jose.garcia@example.com" [label="jose.garcia@example.com" style=filled fillcolor=white];
+"elena.torres@example.com" [label="elena.torres@example.com" style=filled fillcolor=white];
+"jose.garcia@example.com" -> "elena.torres@example.com" [dir="both"];
+"elena.torres@example.com" [label="elena.torres@example.com" style=filled fillcolor=white];
+"jose.garcia@example.com" [label="jose.garcia@example.com" style=filled fillcolor=white];
+}

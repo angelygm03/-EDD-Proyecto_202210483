@@ -3,17 +3,20 @@
 
 #include "node.h"
 #include "../../solicitudList/headers/solicitudList.h"
+#include "../../matrix/matrix.h"
 
 // Clase lista enlazada simple
 class MyList {
 private:
     Node* head; // Puntero al primer nodo de la lista
     int size;   // Tamaño de la lista (número de nodos)
+    
 
 public:
     // Constructor de la lista, inicializa la cabeza como nula y el tamaño en 0
     MyList();
-
+    Matrix matrix;  // Matriz de relaciones de amistad
+    
     // Método para insertar un nuevo nodo en la lista
     void insert(string nombres, string apellidos, string fechaNacimiento, string correo, string contrasena);
 
@@ -41,6 +44,7 @@ public:
     // Método para generar el archivo dot de las solicitudes enviadas
     void generateSolicitudDotFile(Node* usuario);
 
+    void reporteAmistad();
 };
 
 #endif
