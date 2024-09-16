@@ -28,5 +28,6 @@ private:
     AdminWindow *adminwindow;
     Userwindow *userwindow;
     AVLTree *usuariosAVL;
+
 };
 #endif // MAINWINDOW_H

@@ -9,6 +9,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include "avltree.h"
+#include "comentario.h"
+#include "doublelist.h"
+#include "arbolb.h"
 
 namespace Ui {
 class AdminWindow;
@@ -22,6 +25,8 @@ public:
     explicit AdminWindow(QWidget *parent = nullptr);
     ~AdminWindow();
     AVLTree* usuariosAVL;
+    DoubleList* publicacionesList;
+    ArbolB* comentariosTree;
 
 private slots:
     void on_actionCargar_usuarios_triggered();

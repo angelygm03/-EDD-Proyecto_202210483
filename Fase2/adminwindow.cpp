@@ -14,11 +14,16 @@ AdminWindow::AdminWindow(QWidget *parent)
 {
     ui->setupUi(this);
     usuariosAVL = new AVLTree();
+    publicacionesList = new DoubleList();
+    comentariosTree = new ArbolB();
+
 }
 
 AdminWindow::~AdminWindow()
 {
     delete usuariosAVL;
+    delete publicacionesList;
+    delete comentariosTree;
     delete ui;
 }
 
@@ -143,10 +148,71 @@ void AdminWindow::on_actionCargar_solicitudes_triggered() {
     QMessageBox::information(this, "Éxito", "Solicitudes cargadas exitosamente.");
 }
 
-void AdminWindow::on_actionCargarPublicaciones_triggered()
-{
-    // Implementación para cargar publicaciones
+
+void AdminWindow::on_actionCargarPublicaciones_triggered() {
+    // Abrir el archivo JSON
+    QString fileName = QFileDialog::getOpenFileName(this, "Seleccionar archivo JSON", "", "Archivos JSON (*.json);;Todos los archivos (*)");
+
+    if (fileName.isEmpty()) {
+        return; // Salir si no se selecciona archivo
+    }
+
+    QFile file(fileName);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Error", "No se pudo abrir el archivo: " + file.errorString());
+        return;
+    }
+
+    QByteArray fileData = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(fileData);
+
+    if (doc.isNull() || !doc.isArray()) {
+        QMessageBox::warning(this, "Error", "El archivo no es un JSON válido.");
+        return;
+    }
+
+    QJsonArray jsonArray = doc.array();
+
+    // Recorrer las publicaciones
+    for (const QJsonValue& publicacionValue : jsonArray) {
+        QJsonObject publicacionObj = publicacionValue.toObject();
+
+        QString correo = publicacionObj["correo"].toString();
+        QString contenido = publicacionObj["contenido"].toString();
+        QString fecha = publicacionObj["fecha"].toString();
+        QString hora = publicacionObj["hora"].toString();
+        QString imagenPath = publicacionObj["imagen"].toString();
+
+        // Insertar la publicación en la lista doblemente enlazada
+        publicacionesList->insertAtEnd(correo.toStdString(), contenido.toStdString(), fecha.toStdString(), hora.toStdString(), imagenPath.toStdString());
+
+        // Insertar comentarios en el Árbol B
+        QJsonArray comentariosArray = publicacionObj["comentarios"].toArray();
+
+        for (const QJsonValue& comentarioValue : comentariosArray) {
+            QJsonObject comentarioObj = comentarioValue.toObject();
+
+            QString correoComentario = comentarioObj["correo"].toString();
+            QString comentarioTexto = comentarioObj["comentario"].toString();
+            QString fechaComentario = comentarioObj["fecha"].toString();
+            QString horaComentario = comentarioObj["hora"].toString();
+
+            // Crear un comentario y agregarlo al árbol B
+            Comentario* nuevoComentario = new Comentario(correoComentario.toStdString(), comentarioTexto.toStdString(), fechaComentario.toStdString(), horaComentario.toStdString());
+            comentariosTree->insertar(nuevoComentario);
+        }
+    }
+
+    // Imprimir publicaciones y comentarios después de cargar
+    publicacionesList->print();
+    comentariosTree->imprimir();
 }
+
+
+
 void AdminWindow::on_pushButton_clicked()
 {
     MainWindow *mainWindow = new MainWindow(this, usuariosAVL);

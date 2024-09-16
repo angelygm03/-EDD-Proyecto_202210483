@@ -10,10 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     adminwindow.cpp \
+    arbolb.cpp \
     avltree.cpp \
+    comentario.cpp \
+    doublelist.cpp \
     main.cpp \
     mainwindow.cpp \
     node.cpp \
+    nodedoublelist.cpp \
     solicitudlist.cpp \
     stack.cpp \
     stacknode.cpp \
@@ -21,9 +25,13 @@ SOURCES += \
 
 HEADERS += \
     adminwindow.h \
+    arbolb.h \
     avltree.h \
+    comentario.h \
+    doublelist.h \
     mainwindow.h \
     node.h \
+    nodedoublelist.h \
     solicitudlist.h \
     stack.h \
     stacknode.h \
