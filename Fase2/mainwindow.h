@@ -26,7 +26,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     AdminWindow *adminwindow;
-    Userwindow *userwindow;  // Ventana de usuario
-    AVLTree *usuariosAVL;    // Referencia al árbol AVL
+    Userwindow *userwindow;
+    AVLTree *usuariosAVL;
 };
 #endif // MAINWINDOW_H

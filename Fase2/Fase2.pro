@@ -14,6 +14,9 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     node.cpp \
+    solicitudlist.cpp \
+    stack.cpp \
+    stacknode.cpp \
     userwindow.cpp
 
 HEADERS += \
@@ -21,6 +24,9 @@ HEADERS += \
     avltree.h \
     mainwindow.h \
     node.h \
+    solicitudlist.h \
+    stack.h \
+    stacknode.h \
     userwindow.h
 
 FORMS += \
