@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <adminwindow.h>
+#include <userwindow.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -16,7 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr, AVLTree *usuarios = nullptr);
     ~MainWindow();
 
 private slots:
@@ -24,5 +25,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    AdminWindow *adminwindow;
+    Userwindow *userwindow;  // Ventana de usuario
+    AVLTree *usuariosAVL;    // Referencia al árbol AVL
 };
 #endif // MAINWINDOW_H

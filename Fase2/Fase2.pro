@@ -10,20 +10,23 @@ CONFIG += c++17
 
 SOURCES += \
     adminwindow.cpp \
+    avltree.cpp \
     main.cpp \
     mainwindow.cpp \
-    mylist.cpp \
-    node.cpp
+    node.cpp \
+    userwindow.cpp
 
 HEADERS += \
     adminwindow.h \
+    avltree.h \
     mainwindow.h \
-    mylist.h \
-    node.h
+    node.h \
+    userwindow.h
 
 FORMS += \
     adminwindow.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    userwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

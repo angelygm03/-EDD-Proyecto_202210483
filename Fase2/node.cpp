@@ -1,19 +1,20 @@
 #include "node.h"
 
-#include <iostream>
+// Constructor para inicializar el nodo
+Node::Node(string nombres, string apellidos, string fechaNacimiento,
+           string correo, string contrasena) {
+    this->nombres = nombres;
+    this->apellidos = apellidos;
+    this->fechaNacimiento = fechaNacimiento;
+    this->correo = correo;
+    this->contrasena = contrasena;
 
-// Constructor inicializa los valores como vacíos o nulos
-Node::Node() : nombres(""), apellidos(""), fechaNacimiento(""), correo(""), contrasena(""), next(nullptr) {}
-
-// Constructor con parámetros, inicializa los valores con los datos
-Node::Node(string nombres, string apellidos, string fechaNacimiento, string correo, string contrasena)
-    : nombres(nombres), apellidos(apellidos), fechaNacimiento(fechaNacimiento), correo(correo), contrasena(contrasena), next(nullptr) {}
-
-// Método para imprimir la información contenida en el nodo
-void Node::print() {
-    cout << "Nombres: " << nombres << endl;
-    cout << "Apellidos: " << apellidos << endl;
-    cout << "Fecha de Nacimiento: " << fechaNacimiento << endl;
-    cout << "Correo: " << correo << endl;
-    cout << "Contrasenia: " << contrasena << endl;
+    left = nullptr;
+    right = nullptr;
+    factor = 0;
+}
+// Destructor para liberar la memoria de los nodos hijos
+Node::~Node() {
+    delete left;
+    delete right;
 }

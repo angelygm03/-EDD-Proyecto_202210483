@@ -8,7 +8,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
-#include "mylist.h"
+#include "avltree.h"
 
 namespace Ui {
 class AdminWindow;
@@ -21,6 +21,7 @@ class AdminWindow : public QMainWindow
 public:
     explicit AdminWindow(QWidget *parent = nullptr);
     ~AdminWindow();
+    AVLTree* usuariosAVL;
 
 private slots:
     void on_actionCargar_usuarios_triggered();
@@ -29,9 +30,10 @@ private slots:
 
     void on_actionCargarPublicaciones_triggered();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::AdminWindow *ui;
-    MyList lista;
 };
 
 #endif // ADMINWINDOW_H
