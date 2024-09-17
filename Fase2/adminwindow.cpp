@@ -17,48 +17,53 @@ AdminWindow::AdminWindow(QWidget *parent)
     publicacionesList = new DoubleList();
     comentariosTree = new ArbolB();
 
+    // Mensaje de depuración para verificar la inicialización
+    qDebug() << "AdminWindow inicializado con usuariosAVL:" << usuariosAVL;
 }
+
 
 AdminWindow::~AdminWindow()
 {
+    qDebug() << "Destruyendo AdminWindow, usuariosAVL:" << usuariosAVL;
     delete usuariosAVL;
     delete publicacionesList;
     delete comentariosTree;
     delete ui;
 }
 
+
 void AdminWindow::on_actionCargar_usuarios_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this, "Seleccionar archivo JSON", "", "Archivos JSON (*.json);;Todos los archivos (*)");
 
     if (fileName.isEmpty()) {
-        return; // Si no se selecciona ningún archivo, salir de la función
+        qDebug() << "No se seleccionó ningún archivo.";
+        return;
     }
 
     QFile file(fileName);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this, "Error", "No se pudo abrir el archivo: " + file.errorString());
+        qDebug() << "No se pudo abrir el archivo:" << file.errorString();
         return;
     }
 
     QByteArray fileData = file.readAll();
     file.close();
 
-    // Asegúrate de que los datos están en UTF-8
     QString jsonData = QString::fromUtf8(fileData);
 
-    // Parsear el contenido JSON
     QJsonDocument doc = QJsonDocument::fromJson(jsonData.toUtf8());
 
     if (doc.isNull() || !doc.isArray()) {
         QMessageBox::warning(this, "Error", "El archivo no es un JSON válido.");
+        qDebug() << "El archivo JSON no es válido.";
         return;
     }
 
     QJsonArray jsonArray = doc.array();
 
-    // Iterar sobre cada objeto en el JSON
     for (QJsonValue value : jsonArray) {
         QJsonObject usuario = value.toObject();
 
@@ -68,19 +73,18 @@ void AdminWindow::on_actionCargar_usuarios_triggered()
         QString qCorreo = usuario["correo"].toString();
         QString qContrasena = usuario["contraseña"].toString();
 
-        // Convertir QString a std::string
         std::string nombres = qNombres.toStdString();
         std::string apellidos = qApellidos.toStdString();
         std::string fechaNacimiento = qFechaNacimiento.toStdString();
         std::string correo = qCorreo.toStdString();
         std::string contrasena = qContrasena.toStdString();
 
-        // Insertar en el árbol AVL
         usuariosAVL->insert(nombres, apellidos, fechaNacimiento, correo, contrasena);
-        std::cout << "Cargado usuario: " << nombres << " " << apellidos << " (" << correo << ")" << std::endl;
+
+        // Mensaje de depuración para verificar los datos cargados
+        qDebug() << "Usuario cargado:" << QString::fromStdString(nombres) << QString::fromStdString(apellidos) << QString::fromStdString(correo);
     }
 
-    // Imprimir los usuarios en orden alfabético
     usuariosAVL->graph();
 
     QMessageBox::information(this, "Éxito", "Usuarios cargados exitosamente.");
@@ -215,8 +219,17 @@ void AdminWindow::on_actionCargarPublicaciones_triggered() {
 
 void AdminWindow::on_pushButton_clicked()
 {
-    MainWindow *mainWindow = new MainWindow(this, usuariosAVL);
+    // Verificar si la ventana principal ya está abierta
+    MainWindow *mainWindow = qobject_cast<MainWindow*>(QApplication::activeWindow());
+    if (!mainWindow) {
+        // Verificar que usuariosAVL no sea nulo antes de crear MainWindow
+        qDebug() << "Creando MainWindow con usuariosAVL:" << usuariosAVL;
+        mainWindow = new MainWindow(nullptr, usuariosAVL);
+    }
     mainWindow->show();
-    this->hide();
+    this->close();
 }
+
+
+
 

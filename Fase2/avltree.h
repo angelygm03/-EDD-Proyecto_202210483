@@ -1,3 +1,5 @@
+#ifndef AVLTREE_H
+#define AVLTREE_H
 #include "node.h"
 #include <fstream>
 
@@ -27,3 +29,4 @@ public:
     bool verificarCredenciales(const string& correo, const string& contrasena);
 
 };
+#endif // AVLTREE_H

@@ -9,7 +9,6 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include "avltree.h"
-#include "comentario.h"
 #include "doublelist.h"
 #include "arbolb.h"
 

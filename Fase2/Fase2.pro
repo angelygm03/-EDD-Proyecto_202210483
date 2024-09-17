@@ -13,11 +13,13 @@ SOURCES += \
     arbolb.cpp \
     avltree.cpp \
     comentario.cpp \
+    crearpublicacion.cpp \
     doublelist.cpp \
     main.cpp \
     mainwindow.cpp \
     node.cpp \
     nodedoublelist.cpp \
+    publicacioneswindow.cpp \
     solicitudlist.cpp \
     stack.cpp \
     stacknode.cpp \
@@ -28,10 +30,12 @@ HEADERS += \
     arbolb.h \
     avltree.h \
     comentario.h \
+    crearpublicacion.h \
     doublelist.h \
     mainwindow.h \
     node.h \
     nodedoublelist.h \
+    publicacioneswindow.h \
     solicitudlist.h \
     stack.h \
     stacknode.h \
@@ -39,7 +43,9 @@ HEADERS += \
 
 FORMS += \
     adminwindow.ui \
+    crearpublicacion.ui \
     mainwindow.ui \
+    publicacioneswindow.ui \
     userwindow.ui
 
 # Default rules for deployment.

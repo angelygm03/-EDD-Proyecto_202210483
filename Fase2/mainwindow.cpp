@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent, AVLTree *usuarios)
     , usuariosAVL(usuarios)
 {
     ui->setupUi(this);
+    qDebug() << "MainWindow inicializado con usuariosAVL:" << usuariosAVL;
     adminwindow = new AdminWindow();
     userwindow = new Userwindow();
 }
@@ -35,6 +36,7 @@ void MainWindow::on_pushButton_Login_clicked()
     // Verificar si es un usuario regular
     else if (usuariosAVL && usuariosAVL->verificarCredenciales(correo, password)) {
         QMessageBox::information(this, "Alerta", "Inicio de sesión como usuario exitoso");
+        userwindow = new Userwindow(this, usuariosAVL);
         userwindow->show();
         this->hide();
     }
