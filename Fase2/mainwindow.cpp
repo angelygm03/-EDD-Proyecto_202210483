@@ -35,10 +35,13 @@ void MainWindow::on_pushButton_Login_clicked()
     }
     // Verificar si es un usuario regular
     else if (usuariosAVL && usuariosAVL->verificarCredenciales(correo, password)) {
-        QMessageBox::information(this, "Alerta", "Inicio de sesión como usuario exitoso");
-        userwindow = new Userwindow(this, usuariosAVL);
-        userwindow->show();
-        this->hide();
+        Node* usuarioBuscado = usuariosAVL->buscarPorCorreo(correo);
+        if(usuarioBuscado) {
+            QMessageBox::information(this, "Alerta", "Inicio de sesión como usuario exitoso");
+            userwindow = new Userwindow(this, usuariosAVL, usuarioBuscado);
+            userwindow->show();
+            this->hide();
+        }
     }
     // Credenciales inválidas
     else {

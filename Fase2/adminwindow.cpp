@@ -147,6 +147,24 @@ void AdminWindow::on_actionCargar_solicitudes_triggered() {
             usuarioEmisor->solicitudListEnviadas.insert(emisor, receptor, estado);
             std::cout << "Solicitud enviada de " << emisor << " para " << receptor << " añadida a la lista de enviadas del emisor." << std::endl;
         }
+        // Si el emisor existe y la solicitud está pendiente, agregarla a su lista de enviadas
+        if (usuarioEmisor != nullptr && estado == "PENDIENTE") {
+            usuarioEmisor->solicitudListEnviadas.insert(emisor, receptor, estado);
+            std::cout << "Solicitud enviada de " << emisor << " para " << receptor << " añadida a la lista de enviadas del emisor." << std::endl;
+        }
+
+        // Manejar solicitudes aceptadas
+        if (estado == "ACEPTADA") {
+            if (usuarioReceptor != nullptr) {
+                usuarioReceptor->friends.addFriend(emisor); // Añadir el emisor a la lista de amigos del receptor
+                std::cout << emisor << " añadido a la lista de amigos de " << receptor << std::endl;
+            }
+
+            if (usuarioEmisor != nullptr) {
+                usuarioEmisor->friends.addFriend(receptor); // Añadir el receptor a la lista de amigos del emisor
+                std::cout << receptor << " añadido a la lista de amigos de " << emisor << std::endl;
+            }
+        }
     }
 
     QMessageBox::information(this, "Éxito", "Solicitudes cargadas exitosamente.");

@@ -5,8 +5,8 @@
 Publicarwindow::Publicarwindow(QWidget *parent, const string &usuarioCorreo)
     : QMainWindow(parent)
     , ui(new Ui::Publicarwindow)
-    , publicacionesList(new DoubleList())
     , usuarioCorreo(usuarioCorreo)
+    , publicacionesList(new DoubleList())
 {
     ui->setupUi(this);
 }
@@ -23,8 +23,5 @@ void Publicarwindow::on_pushButton_2_crearPost_clicked()
     this->hide();
 }
 
-void Publicarwindow::setPublicacionesList(DoubleList *list)
-{
-    publicacionesList = list;
-}
+
 

@@ -15,6 +15,8 @@ SOURCES += \
     comentario.cpp \
     crearpublicacion.cpp \
     doublelist.cpp \
+    friendlist.cpp \
+    friendnode.cpp \
     main.cpp \
     mainwindow.cpp \
     node.cpp \
@@ -32,6 +34,8 @@ HEADERS += \
     comentario.h \
     crearpublicacion.h \
     doublelist.h \
+    friendlist.h \
+    friendnode.h \
     mainwindow.h \
     node.h \
     nodedoublelist.h \
