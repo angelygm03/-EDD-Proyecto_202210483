@@ -3,13 +3,18 @@
 #include <QMessageBox>
 #include <QTabWidget>
 #include "mainwindow.h"
+#include <QFileDialog>
+#include <QImage>
+#include <QGraphicsScene>
+#include <QPainter>
 
-Userwindow::Userwindow(QWidget *parent, AVLTree *usuariosAVL, Node *usuarioActual)
+Userwindow::Userwindow(QWidget *parent, AVLTree *usuariosAVL, Node *usuarioActual, DoubleList* publicacionesList)
     : QMainWindow(parent)
     , ui(new Ui::Userwindow)
     , usuariosAVL(usuariosAVL)
     , pilaSolicitudes(nullptr)
     , usuarioActual(usuarioActual)
+    , publicaciones(publicacionesList)
 {
     ui->setupUi(this);
     if (usuarioActual != nullptr) {
@@ -221,3 +226,54 @@ void Userwindow::on_pushButton_2_agregar_clicked() {
 
     QMessageBox::information(this, "Solicitud Enviada", "Se ha enviado la solicitud de amistad correctamente.");
 }
+
+void Userwindow::on_pushButton_2_publicar_clicked() {
+    QString contenido = ui->plainTextEdit_contenidoPost->toPlainText(); // Contenido de la publicación
+    if (contenido.isEmpty()) {
+        QMessageBox::warning(this, "Error", "El contenido de la publicación no puede estar vacío.");
+        return;
+    }
+
+    // Obtener la fecha y hora actuales
+    QDateTime now = QDateTime::currentDateTime();
+    QString fecha = now.toString("dd/MM/yyyy");
+    QString hora = now.toString("HH:mm:ss");
+
+    // Insertar la publicación en la lista
+    publicaciones->insertAtEnd(usuarioActual->correo, contenido.toStdString(), fecha.toStdString(), hora.toStdString(), imagenPath.toStdString());
+
+    QMessageBox::information(this, "Publicación Registrada", "Tu publicación ha sido realizada con éxito.");
+    publicaciones->print();
+    // Limpiar el contenido y la imagen seleccionada
+    ui->plainTextEdit_contenidoPost->clear();
+    imagenPath.clear();
+    QGraphicsScene *scene = new QGraphicsScene(this); // Limpiar imagen anterior
+    ui->graphicsView_img->setScene(scene);
+}
+
+
+void Userwindow::on_pushButton_abrirImg_clicked()
+{
+    // Pasos para abrir un diálogo y seleccionar un archivo de imagen
+    QString filePath = QFileDialog::getOpenFileName(this, "Abrir Imagen", "", "Imágenes (*.png *.xpm *.jpg *.jpeg *.bmp)");
+
+    if (!filePath.isEmpty()) {
+        // Guardar el path de la imagen para futuras publicaciones
+        imagenPath = filePath;
+
+        // Crear un nuevo QImage para cargar la imagen desde el path
+        QImage image(imagenPath);
+        if (image.isNull()) {
+            QMessageBox::warning(this, "Error", "No se pudo cargar la imagen. Asegúrate de que el archivo sea una imagen válida.");
+            return;
+        }
+
+        // Establecer la escena para mostrar la imagen en el QGraphicsView
+        QGraphicsScene *scene = new QGraphicsScene(this);
+        scene->addPixmap(QPixmap::fromImage(image));
+        ui->graphicsView_img->setScene(scene);
+        ui->graphicsView_img->setRenderHint(QPainter::Antialiasing); // renderizar la imagen
+        ui->graphicsView_img->fitInView(scene->sceneRect(), Qt::KeepAspectRatio); // mantener la relación de aspecto
+    }
+}
+

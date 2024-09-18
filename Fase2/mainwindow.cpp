@@ -1,15 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent, AVLTree *usuarios)
+MainWindow::MainWindow(QWidget *parent, AVLTree *usuarios, DoubleList* publicacionesList)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , usuariosAVL(usuarios)
+    , publicacionesList(publicacionesList)
 {
     ui->setupUi(this);
     qDebug() << "MainWindow inicializado con usuariosAVL:" << usuariosAVL;
     adminwindow = new AdminWindow();
-    userwindow = new Userwindow();
+    userwindow = nullptr;
 }
 
 MainWindow::~MainWindow()
@@ -38,7 +39,7 @@ void MainWindow::on_pushButton_Login_clicked()
         Node* usuarioBuscado = usuariosAVL->buscarPorCorreo(correo);
         if(usuarioBuscado) {
             QMessageBox::information(this, "Alerta", "Inicio de sesión como usuario exitoso");
-            userwindow = new Userwindow(this, usuariosAVL, usuarioBuscado);
+            userwindow = new Userwindow(this, usuariosAVL, usuarioBuscado, publicacionesList);
             userwindow->show();
             this->hide();
         }

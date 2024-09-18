@@ -13,7 +13,6 @@ SOURCES += \
     arbolb.cpp \
     avltree.cpp \
     comentario.cpp \
-    crearpublicacion.cpp \
     doublelist.cpp \
     friendlist.cpp \
     friendnode.cpp \
@@ -32,7 +31,6 @@ HEADERS += \
     arbolb.h \
     avltree.h \
     comentario.h \
-    crearpublicacion.h \
     doublelist.h \
     friendlist.h \
     friendnode.h \
@@ -47,7 +45,6 @@ HEADERS += \
 
 FORMS += \
     adminwindow.ui \
-    crearpublicacion.ui \
     mainwindow.ui \
     publicacioneswindow.ui \
     userwindow.ui

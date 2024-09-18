@@ -229,14 +229,13 @@ void AdminWindow::on_actionCargarPublicaciones_triggered() {
 
 
 
-void AdminWindow::on_pushButton_clicked()
-{
+void AdminWindow::on_pushButton_clicked() {
     // Verificar si la ventana principal ya está abierta
     MainWindow *mainWindow = qobject_cast<MainWindow*>(QApplication::activeWindow());
     if (!mainWindow) {
-        // Verificar que usuariosAVL no sea nulo antes de crear MainWindow
-        qDebug() << "Creando MainWindow con usuariosAVL:" << usuariosAVL;
-        mainWindow = new MainWindow(nullptr, usuariosAVL);
+        // Verificar que usuariosAVL y publicacionesList no sean nulos antes de crear MainWindow
+        qDebug() << "Creando MainWindow con usuariosAVL y publicacionesList:";
+        mainWindow = new MainWindow(nullptr, usuariosAVL, publicacionesList);
     }
     mainWindow->show();
     this->close();

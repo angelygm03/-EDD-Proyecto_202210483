@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr, AVLTree *usuarios = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr, AVLTree *usuariosAVL = nullptr, DoubleList* publicacionesList = nullptr);
     ~MainWindow();
 
 private slots:
@@ -28,6 +28,6 @@ private:
     AdminWindow *adminwindow;
     Userwindow *userwindow;
     AVLTree *usuariosAVL;
-
+    DoubleList *publicacionesList;
 };
 #endif // MAINWINDOW_H
