@@ -147,12 +147,6 @@ void AdminWindow::on_actionCargar_solicitudes_triggered() {
             usuarioEmisor->solicitudListEnviadas.insert(emisor, receptor, estado);
             std::cout << "Solicitud enviada de " << emisor << " para " << receptor << " añadida a la lista de enviadas del emisor." << std::endl;
         }
-        // Si el emisor existe y la solicitud está pendiente, agregarla a su lista de enviadas
-        if (usuarioEmisor != nullptr && estado == "PENDIENTE") {
-            usuarioEmisor->solicitudListEnviadas.insert(emisor, receptor, estado);
-            std::cout << "Solicitud enviada de " << emisor << " para " << receptor << " añadida a la lista de enviadas del emisor." << std::endl;
-        }
-
         // Manejar solicitudes aceptadas
         if (estado == "ACEPTADA") {
             if (usuarioReceptor != nullptr) {

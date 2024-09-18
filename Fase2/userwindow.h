@@ -18,19 +18,18 @@ public:
     explicit Userwindow(QWidget *parent = nullptr, AVLTree *usuariosAVL = nullptr, Node *usuarioActual = nullptr);
     ~Userwindow();
     void populateSolicitudesTable();
+    void populateUsuariosNoAmigos();
 
 private slots:
     // Funciones para manejar los eventos de la interfaz
     void on_pushButton_2_buscar_clicked();
-    void on_actionVer_solicitudes_triggered();
 
     // Funciones para aceptar o eliminar solicitudes
     void aceptarSolicitud();
     void eliminarSolicitud();
-
-    void on_pushButton_2_verSolicitudes_clicked();
-
     void on_pushButton_clicked();
+
+    void on_pushButton_2_agregar_clicked();
 
 private:
     Ui::Userwindow *ui;

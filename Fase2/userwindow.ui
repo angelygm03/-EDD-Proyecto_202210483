@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>953</width>
-    <height>643</height>
+    <width>979</width>
+    <height>675</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,11 +20,11 @@
       <x>0</x>
       <y>0</y>
       <width>951</width>
-      <height>641</height>
+      <height>661</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_buscar">
      <attribute name="title">
@@ -269,6 +269,24 @@
        </font>
       </property>
      </widget>
+     <widget class="QPushButton" name="pushButton_2_agregar">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>570</y>
+        <width>401</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Agregar</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2_publicaciones">
      <attribute name="title">
@@ -282,8 +300,8 @@
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
-        <x>320</x>
-        <y>0</y>
+        <x>220</x>
+        <y>20</y>
         <width>491</width>
         <height>91</height>
        </rect>
@@ -299,65 +317,12 @@
        <string>Haz nuevos amigos</string>
       </property>
      </widget>
-     <widget class="QGroupBox" name="groupBox">
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>320</y>
-        <width>821</width>
-        <height>221</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="title">
-       <string>Personas que quizás conozcas</string>
-      </property>
-      <widget class="QTableWidget" name="tableWidget_enviadas">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>40</y>
-         <width>801</width>
-         <height>171</height>
-        </rect>
-       </property>
-       <column>
-        <property name="text">
-         <string>Nombres</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Apellidos</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Correo</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string/>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string/>
-        </property>
-       </column>
-      </widget>
-     </widget>
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>70</y>
-        <width>821</width>
+        <x>110</x>
+        <y>160</y>
+        <width>641</width>
         <height>221</height>
        </rect>
       </property>
@@ -372,9 +337,9 @@
       <widget class="QTableWidget" name="tableWidget_recibidas">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>70</x>
          <y>40</y>
-         <width>801</width>
+         <width>501</width>
          <height>171</height>
         </rect>
        </property>
@@ -386,11 +351,6 @@
        <column>
         <property name="text">
          <string>Estado</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string/>
         </property>
        </column>
        <column>

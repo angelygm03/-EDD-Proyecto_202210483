@@ -10,6 +10,7 @@ public:
 
     // Constructor
     FriendNode(const std::string& email);
+    ~FriendNode();
 };
 
 #endif

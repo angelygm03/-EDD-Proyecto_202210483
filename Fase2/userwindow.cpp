@@ -193,3 +193,31 @@ void Userwindow::on_pushButton_clicked()
     }
 }
 
+
+void Userwindow::on_pushButton_2_agregar_clicked() {
+    QString correoReceptor = ui->lineEdit_buscar->text(); // Obtener el correo del receptor de la interfaz
+
+    // Verificar si el correo del receptor no está vacío
+    if (correoReceptor.isEmpty()) {
+        QMessageBox::warning(this, "Error", "Debe ingresar un correo válido.");
+        return;
+    }
+
+    // Buscar el usuario receptor en el AVL
+    Node* usuarioReceptor = usuariosAVL->buscarPorCorreo(correoReceptor.toStdString());
+
+    if (!usuarioReceptor) {
+        QMessageBox::information(this, "Usuario no encontrado", "El usuario con el correo ingresado no existe.");
+        return;
+    }
+
+    // Agregar la solicitud a la pila del receptor
+    usuarioReceptor->solicitudes.push(usuarioActual->correo, usuarioReceptor->correo, "PENDIENTE");
+    std::cout << "Solicitud enviada a " << usuarioReceptor->correo << std::endl;
+
+    // Agregar la solicitud a la lista de solicitudes enviadas del emisor (usuarioActual)
+    usuarioActual->solicitudListEnviadas.insert(usuarioActual->correo, usuarioReceptor->correo, "PENDIENTE");
+    std::cout << "Solicitud añadida a la lista de solicitudes enviadas de " << usuarioActual->correo << std::endl;
+
+    QMessageBox::information(this, "Solicitud Enviada", "Se ha enviado la solicitud de amistad correctamente.");
+}
