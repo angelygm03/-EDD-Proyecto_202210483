@@ -1,0 +1,6 @@
+digraph G {
+    node [fontname="Arial"];
+    "14/08/2024" [label="14/08/2024"];
+    "14/08/2024_pub0" [label="jg@example.com: Esos pequeños momentos de felicidad son los que más cuentan.\n13:20", shape=box];
+    "14/08/2024" -> "14/08/2024_pub0";
+}

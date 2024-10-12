@@ -12,15 +12,20 @@ SOURCES += \
     adminwindow.cpp \
     arbolb.cpp \
     avltree.cpp \
+    binarysearchtree.cpp \
     comentario.cpp \
     doublelist.cpp \
+    fechalist.cpp \
+    fechanodo.cpp \
     friendlist.cpp \
     friendnode.cpp \
+    imagewindow.cpp \
     main.cpp \
     mainwindow.cpp \
     node.cpp \
+    nodebst.cpp \
     nodedoublelist.cpp \
-    publicacioneswindow.cpp \
+    signup.cpp \
     solicitudlist.cpp \
     stack.cpp \
     stacknode.cpp \
@@ -30,14 +35,19 @@ HEADERS += \
     adminwindow.h \
     arbolb.h \
     avltree.h \
+    binarysearchtree.h \
     comentario.h \
     doublelist.h \
+    fechalist.h \
+    fechanodo.h \
     friendlist.h \
     friendnode.h \
+    imagewindow.h \
     mainwindow.h \
     node.h \
+    nodebst.h \
     nodedoublelist.h \
-    publicacioneswindow.h \
+    signup.h \
     solicitudlist.h \
     stack.h \
     stacknode.h \
@@ -45,8 +55,9 @@ HEADERS += \
 
 FORMS += \
     adminwindow.ui \
+    imagewindow.ui \
     mainwindow.ui \
-    publicacioneswindow.ui \
+    signup.ui \
     userwindow.ui
 
 # Default rules for deployment.

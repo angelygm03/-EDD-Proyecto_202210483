@@ -6,16 +6,29 @@
 #include <QJsonValue>
 #include <QMessageBox>
 #include "mainwindow.h"
+#include "imagewindow.h"
 #include <iostream>
 
-AdminWindow::AdminWindow(QWidget *parent)
+AdminWindow::AdminWindow(QWidget *parent, AVLTree* existingAVL, BinarySearchTree* existingBST)
     : QMainWindow(parent)
     , ui(new Ui::AdminWindow)
 {
     ui->setupUi(this);
-    usuariosAVL = new AVLTree();
+    usuariosAVL = existingAVL;
     publicacionesList = new DoubleList();
     comentariosTree = new ArbolB();
+    bst = existingBST;
+
+    // Establecer encabezados de la tabla
+    QStringList encabezados;
+    encabezados << "Nombre" << "Apellido" << "Correo" << "Nacimiento";
+    ui->tableWidget_usuarios->setHorizontalHeaderLabels(encabezados);
+
+    // Ajustar ancho de columnas
+    ui->tableWidget_usuarios->setColumnWidth(2, 250);
+    ui->tableWidget_usuarios->setColumnWidth(0, 100);
+    ui->tableWidget_usuarios->setColumnWidth(1, 100);
+    ui->tableWidget_usuarios->setColumnWidth(3, 150);
 
     // Mensaje de depuración para verificar la inicialización
     qDebug() << "AdminWindow inicializado con usuariosAVL:" << usuariosAVL;
@@ -24,10 +37,9 @@ AdminWindow::AdminWindow(QWidget *parent)
 
 AdminWindow::~AdminWindow()
 {
-    qDebug() << "Destruyendo AdminWindow, usuariosAVL:" << usuariosAVL;
-    delete usuariosAVL;
     delete publicacionesList;
     delete comentariosTree;
+    delete bst;
     delete ui;
 }
 
@@ -85,8 +97,6 @@ void AdminWindow::on_actionCargar_usuarios_triggered()
         qDebug() << "Usuario cargado:" << QString::fromStdString(nombres) << QString::fromStdString(apellidos) << QString::fromStdString(correo);
     }
 
-    usuariosAVL->graph();
-
     QMessageBox::information(this, "Éxito", "Usuarios cargados exitosamente.");
 }
 
@@ -138,15 +148,26 @@ void AdminWindow::on_actionCargar_solicitudes_triggered() {
 
         // Si el receptor existe y la solicitud está pendiente, agregarla a la pila del receptor
         if (usuarioReceptor != nullptr && estado == "PENDIENTE") {
-            usuarioReceptor->solicitudes.push(emisor, receptor, estado);
-            std::cout << "Solicitud para " << receptor << " de " << emisor << " añadida a la pila del receptor." << std::endl;
+            // Verificar si ya son amigos antes de añadir la solicitud
+            if (!usuarioReceptor->friends.esAmigo(emisor)) {
+                usuarioReceptor->solicitudes.push(emisor, receptor, estado);
+                std::cout << "Solicitud para " << receptor << " de " << emisor << " añadida a la pila del receptor." << std::endl;
+            } else {
+                std::cout << "No se puede añadir solicitud: " << emisor << " ya es amigo de " << receptor << std::endl;
+            }
         }
 
         // Si el emisor existe y la solicitud está pendiente, agregarla a su lista de enviadas
         if (usuarioEmisor != nullptr && estado == "PENDIENTE") {
-            usuarioEmisor->solicitudListEnviadas.insert(emisor, receptor, estado);
-            std::cout << "Solicitud enviada de " << emisor << " para " << receptor << " añadida a la lista de enviadas del emisor." << std::endl;
+            // Agregar la solicitud a la lista de enviadas del emisor solo si no son amigos
+            if (!usuarioEmisor->friends.esAmigo(receptor)) {
+                usuarioEmisor->solicitudListEnviadas.insert(emisor, receptor, estado);
+                std::cout << "Solicitud enviada de " << emisor << " para " << receptor << " añadida a la lista de enviadas del emisor." << std::endl;
+            } else {
+                std::cout << "No se puede añadir solicitud a la lista de enviadas: " << emisor << " ya es amigo de " << receptor << std::endl;
+            }
         }
+
         // Manejar solicitudes aceptadas
         if (estado == "ACEPTADA") {
             if (usuarioReceptor != nullptr) {
@@ -163,7 +184,6 @@ void AdminWindow::on_actionCargar_solicitudes_triggered() {
 
     QMessageBox::information(this, "Éxito", "Solicitudes cargadas exitosamente.");
 }
-
 
 void AdminWindow::on_actionCargarPublicaciones_triggered() {
     // Abrir el archivo JSON
@@ -201,9 +221,18 @@ void AdminWindow::on_actionCargarPublicaciones_triggered() {
         QString fecha = publicacionObj["fecha"].toString();
         QString hora = publicacionObj["hora"].toString();
         QString imagenPath = publicacionObj["imagen"].toString();
+        qDebug() << "AdminWindow inicializado con publicaciones:" << bst;
 
         // Insertar la publicación en la lista doblemente enlazada
         publicacionesList->insertAtEnd(correo.toStdString(), contenido.toStdString(), fecha.toStdString(), hora.toStdString(), imagenPath.toStdString());
+
+        // Buscar el usuario en el árbol AVL por correo
+        Node* usuario = usuariosAVL->buscarPorCorreo(correo.toStdString());
+        if (usuario) {
+            usuario->publicaciones->insertarPublicacion(fecha.toStdString(), correo.toStdString(), contenido.toStdString(), hora.toStdString());
+            // Insertar la publicación en el BST
+            bst->insertarPublicacion(fecha.toStdString(), correo.toStdString(), contenido.toStdString(), hora.toStdString());
+        }
 
         // Insertar comentarios en el Árbol B
         QJsonArray comentariosArray = publicacionObj["comentarios"].toArray();
@@ -221,26 +250,91 @@ void AdminWindow::on_actionCargarPublicaciones_triggered() {
             comentariosTree->insertar(nuevoComentario);
         }
     }
-
+    QMessageBox::information(this, "Éxito", "Publicaciones cargadas exitosamente.");
     // Imprimir publicaciones y comentarios después de cargar
     publicacionesList->print();
     comentariosTree->imprimir();
 }
 
 
-
 void AdminWindow::on_pushButton_clicked() {
-    // Verificar si la ventana principal ya está abierta
     MainWindow *mainWindow = qobject_cast<MainWindow*>(QApplication::activeWindow());
     if (!mainWindow) {
-        // Verificar que usuariosAVL y publicacionesList no sean nulos antes de crear MainWindow
-        qDebug() << "Creando MainWindow con usuariosAVL y publicacionesList:";
-        mainWindow = new MainWindow(nullptr, usuariosAVL, publicacionesList);
+        mainWindow = new MainWindow(nullptr, usuariosAVL, publicacionesList, bst); // Reutilizar usuariosAVL
     }
     mainWindow->show();
     this->close();
 }
 
+void AdminWindow::on_pushButton_2_buscar_clicked()
+{
+    QString correoBuscado = ui->lineEdit_correo->text().trimmed(); // Obtenemos el texto del lineEdit y eliminamos espacios
+    QString selectedOrder = ui->comboBox_orden->currentText();
+
+    // Limpiar la tabla antes de mostrar nuevos resultados
+    ui->tableWidget_usuarios->clearContents();
+    ui->tableWidget_usuarios->setRowCount(0); // Asegúrate de vaciar la tabla completamente
+
+    int fila = 0;
+
+    if (correoBuscado.isEmpty()) {
+        // Si el correo está vacío, hacer la búsqueda según el orden seleccionado
+        if (selectedOrder == "Ninguno") {
+            return; // No hacemos nada
+        } else if (selectedOrder == "Preorden") {
+            usuariosAVL->preorden(usuariosAVL->root, ui->tableWidget_usuarios, fila);
+        } else if (selectedOrder == "Inorden") {
+            usuariosAVL->inorden(usuariosAVL->root, ui->tableWidget_usuarios, fila);
+        } else if (selectedOrder == "Postorden") {
+            usuariosAVL->postorden(usuariosAVL->root, ui->tableWidget_usuarios, fila);
+        }
+    } else {
+        // Si hay un correo, buscar el usuario específico
+        Node* usuario = usuariosAVL->buscarPorCorreo(correoBuscado.toStdString());
+        if (usuario != nullptr) {
+            // Si se encontró al usuario, agregar su información a la tabla
+            ui->tableWidget_usuarios->insertRow(fila);
+            ui->tableWidget_usuarios->setItem(fila, 0, new QTableWidgetItem(QString::fromStdString(usuario->nombres)));
+            ui->tableWidget_usuarios->setItem(fila, 1, new QTableWidgetItem(QString::fromStdString(usuario->apellidos)));
+            ui->tableWidget_usuarios->setItem(fila, 2, new QTableWidgetItem(QString::fromStdString(usuario->correo)));
+            ui->tableWidget_usuarios->setItem(fila, 3, new QTableWidgetItem(QString::fromStdString(usuario->fechaNacimiento)));
+
+            // Centrar el texto en las celdas
+            for (int i = 0; i < 4; i++) {
+                QTableWidgetItem* item = ui->tableWidget_usuarios->item(fila, i);
+                if (item) {
+                    item->setTextAlignment(Qt::AlignCenter);
+                }
+            }
+        } else {
+            // Si no se encuentra el usuario, se puede mostrar un mensaje
+            QMessageBox::warning(this, "Usuario no encontrado", "No se encontró un usuario con el correo proporcionado.");
+        }
+    }
+}
+
+void AdminWindow::on_actionUsuarios_triggered()
+{
+    usuariosAVL->graph();
+    ImageWindow *imageWindow = new ImageWindow("avltree.png", this);
+    imageWindow->setWindowTitle("Árbol AVL de Usuarios");
+    imageWindow->resize(800, 600);
+    imageWindow->show();
+}
 
 
+void AdminWindow::on_actionPublicaciones_triggered()
+{
+    publicacionesList->generateDotFile();
+    ImageWindow *imageWindow = new ImageWindow("reportePublicaciones.png", this);
+    imageWindow->setWindowTitle("Gráfico de Publicaciones");
+    imageWindow->resize(800, 600);
+    imageWindow->show();
+}
+
+
+void AdminWindow::on_actionReporte_Comentarios_triggered()
+{
+
+}
 

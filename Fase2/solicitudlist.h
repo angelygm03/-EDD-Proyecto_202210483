@@ -16,10 +16,10 @@ public:
 
 class SolicitudList {
 private:
-    SolicitudNode* head;
-    int size;
 
 public:
+    SolicitudNode* head;
+    int size;
     SolicitudList();
     void insert(string emisor, string receptor, string estado);
     void print();

@@ -14,6 +14,7 @@ public:
     void addFriend(const std::string& email);
     void showFriends() const;
     int countFriends() const;
+    bool esAmigo(const std::string& email) const;
 };
 
 #endif

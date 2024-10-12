@@ -75,38 +75,6 @@ SolicitudNode* SolicitudList::buscar(const string& emisor, const string& recepto
     return nullptr;
 }
 
-// Método para generar el archivo dot de las solicitudes
-void SolicitudList::generateDotFile(const string& fileName) {
-    ofstream file("reporteSolicitudes.dot");
-    if (!file.is_open()) {
-        cout << "Error al abrir el archivo para escribir el gráfico." << endl;
-        return;
-    }
-
-    file << "digraph G {\n";
-    file << "rankdir=LR;\n";
-    file << "    node [shape=box];\n";
-
-    SolicitudNode* current = head;
-    while (current != nullptr) {
-        file << "    \"" << current->receptor << "\";\n";
-        current = current->next;
-    }
-
-    current = head;
-    while (current != nullptr && current->next != nullptr) {
-        file << "    \"" << current->receptor << "\" -> \"" << current->next->receptor << "\";\n";
-        current = current->next;
-    }
-
-    file << "}\n";
-    file.close();
-
-    // Convertir el archivo .dot a .png automáticamente
-    system("dot -Tpng reporteSolicitudes.dot -o reporteSolicitudes.png");
-    system("start reporteSolicitudes.png");
-}
-
 bool SolicitudList::eliminarPorEmisorYReceptor(const string& emisor, const string& receptor) {
     if (head == nullptr) {
         return false; // Lista vacía

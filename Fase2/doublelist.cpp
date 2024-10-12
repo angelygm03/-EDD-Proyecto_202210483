@@ -187,7 +187,6 @@ void DoubleList::generateDotFile() {
 
     // Convertir el archivo .dot a .png automáticamente
     system("dot -Tpng reportePublicaciones.dot -o reportePublicaciones.png");
-    system("start reportePublicaciones.png");
 }
 
 

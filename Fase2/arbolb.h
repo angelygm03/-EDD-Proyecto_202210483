@@ -14,6 +14,7 @@ public:
     void insertarComentario(Comentario* comentario);
     void dividirNodo(int i, NodoB* y);
     void imprimir();
+    void graficar(std::ofstream &file);
 };
 
 class ArbolB {
@@ -24,6 +25,7 @@ public:
     ArbolB();
     void insertar(Comentario* comentario);
     void imprimir();
+    void graficar(const std::string &filename);
 };
 
 

@@ -30,6 +30,7 @@ public:
     QLineEdit *lineEdit_Usuario;
     QLineEdit *lineEdit_2_Password;
     QPushButton *pushButton_Login;
+    QPushButton *pushButton_Registro;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -74,11 +75,15 @@ public:
         lineEdit_2_Password->setEchoMode(QLineEdit::EchoMode::Password);
         pushButton_Login = new QPushButton(centralwidget);
         pushButton_Login->setObjectName("pushButton_Login");
-        pushButton_Login->setGeometry(QRect(290, 290, 151, 41));
+        pushButton_Login->setGeometry(QRect(200, 280, 161, 41));
         QFont font3;
         font3.setFamilies({QString::fromUtf8("Gill Sans MT")});
         font3.setPointSize(12);
         pushButton_Login->setFont(font3);
+        pushButton_Registro = new QPushButton(centralwidget);
+        pushButton_Registro->setObjectName("pushButton_Registro");
+        pushButton_Registro->setGeometry(QRect(380, 280, 161, 41));
+        pushButton_Registro->setFont(font3);
         MainWindow->setCentralWidget(centralwidget);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
@@ -96,6 +101,7 @@ public:
         label_2->setText(QCoreApplication::translate("MainWindow", "Usuario", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "Contrase\303\261a", nullptr));
         pushButton_Login->setText(QCoreApplication::translate("MainWindow", "Ingresar", nullptr));
+        pushButton_Registro->setText(QCoreApplication::translate("MainWindow", "Registrarse", nullptr));
     } // retranslateUi
 
 };

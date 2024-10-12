@@ -1,15 +1,19 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "signup.h"
+#include "avltree.h"
 
-MainWindow::MainWindow(QWidget *parent, AVLTree *usuarios, DoubleList* publicacionesList)
+MainWindow::MainWindow(QWidget *parent, AVLTree *usuarios, DoubleList* publicacionesList, BinarySearchTree *existingBST)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , usuariosAVL(usuarios)
     , publicacionesList(publicacionesList)
+    , bst(existingBST)
 {
     ui->setupUi(this);
+    qDebug() << "Dirección de usuariosAVL en MainWindow:" << usuariosAVL;
     qDebug() << "MainWindow inicializado con usuariosAVL:" << usuariosAVL;
-    adminwindow = new AdminWindow();
+    adminwindow = new AdminWindow(nullptr, usuariosAVL, bst);
     userwindow = nullptr;
 }
 
@@ -39,7 +43,7 @@ void MainWindow::on_pushButton_Login_clicked()
         Node* usuarioBuscado = usuariosAVL->buscarPorCorreo(correo);
         if(usuarioBuscado) {
             QMessageBox::information(this, "Alerta", "Inicio de sesión como usuario exitoso");
-            userwindow = new Userwindow(this, usuariosAVL, usuarioBuscado, publicacionesList);
+            userwindow = new Userwindow(this, usuariosAVL, usuarioBuscado, publicacionesList, bst, adminwindow->comentariosTree);
             userwindow->show();
             this->hide();
         }
@@ -49,4 +53,16 @@ void MainWindow::on_pushButton_Login_clicked()
         QMessageBox::warning(this, "Alerta", "Credenciales inválidas. Inténtalo nuevamente");
     }
 }
+
+
+void MainWindow::on_pushButton_Registro_clicked() {
+    if (!usuariosAVL) {
+        QMessageBox::critical(this, "Error", "El árbol AVL no está inicializado.");
+        return;
+    }
+    SignUp *signupWindow = new SignUp(this, usuariosAVL, this);
+    signupWindow->show();
+    this->hide();
+}
+
 

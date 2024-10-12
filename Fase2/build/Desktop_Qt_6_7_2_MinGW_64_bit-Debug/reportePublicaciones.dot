@@ -1,0 +1,23 @@
+digraph G {
+rankdir=LR;
+node [shape=box];
+"0x1f7049ba4b0" [label="Correo: cg@example.com\nContenido: Disfrutando de un día soleado en la playa, la vida es mejor con arena y mar.\nFecha: 12/08/2024\nHora: 14:23"];
+"0x1f7049ba4b0" -> "0x1f7049b9d30" [dir=both];
+"0x1f7049b9d30" [label="Correo: ml@example.com\nContenido: Hoy aprendí algo nuevo, siempre es bueno salir de la zona de confort.\nFecha: 11/08/2024\nHora: 09:45"];
+"0x1f7049b9d30" -> "0x1f7049b9970" [dir=both];
+"0x1f7049b9970" [label="Correo: jm@example.com\nContenido: El café de la mañana nunca decepciona, ¡energía pura para el día!\nFecha: 10/08/2024\nHora: 07:30"];
+"0x1f7049b9970" -> "0x1f7049b8e30" [dir=both];
+"0x1f7049b8e30" [label="Correo: ah@example.com\nContenido: Los atardeceres en la ciudad son simplemente mágicos, me encanta.\nFecha: 13/08/2024\nHora: 18:12"];
+"0x1f7049b8e30" -> "0x1f7049bac30" [dir=both];
+"0x1f7049bac30" [label="Correo: lp@example.com\nContenido: Día perfecto para una caminata por el parque, disfrutando de la naturaleza.\nFecha: 15/08/2024\nHora: 10:57"];
+"0x1f7049bac30" -> "0x1f7049b9eb0" [dir=both];
+"0x1f7049b9eb0" [label="Correo: lr@example.com\nContenido: La lectura de un buen libro puede cambiar tu perspectiva del mundo.\nFecha: 20/08/2024\nHora: 16:45"];
+"0x1f7049b9eb0" -> "0x1f7049ba330" [dir=both];
+"0x1f7049ba330" [label="Correo: jg@example.com\nContenido: Esos pequeños momentos de felicidad son los que más cuentan.\nFecha: 14/08/2024\nHora: 13:20"];
+"0x1f7049ba330" -> "0x1f7049b9bb0" [dir=both];
+"0x1f7049b9bb0" [label="Correo: et@example.com\nContenido: Cocinando mi plato favorito, nada como la comida casera.\nFecha: 21/08/2024\nHora: 11:40"];
+"0x1f7049b9bb0" -> "0x1f7049baab0" [dir=both];
+"0x1f7049baab0" [label="Correo: mr@example.com\nContenido: Una nueva aventura comienza, emocionado por lo que viene.\nFecha: 19/08/2024\nHora: 08:50"];
+"0x1f7049baab0" -> "0x1f7049b8ef0" [dir=both];
+"0x1f7049b8ef0" [label="Correo: sg@example.com\nContenido: La música siempre encuentra la manera de alegrar mi día.\nFecha: 18/08/2024\nHora: 17:15"];
+}

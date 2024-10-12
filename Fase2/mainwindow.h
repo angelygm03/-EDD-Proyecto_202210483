@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <adminwindow.h>
 #include <userwindow.h>
+#include "binarysearchtree.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,11 +18,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr, AVLTree *usuariosAVL = nullptr, DoubleList* publicacionesList = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr, AVLTree *usuariosAVL = nullptr, DoubleList* publicacionesList = nullptr, BinarySearchTree *bst = nullptr);
     ~MainWindow();
 
 private slots:
     void on_pushButton_Login_clicked();
+
+    void on_pushButton_Registro_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -29,5 +32,6 @@ private:
     Userwindow *userwindow;
     AVLTree *usuariosAVL;
     DoubleList *publicacionesList;
+    BinarySearchTree *bst;
 };
 #endif // MAINWINDOW_H

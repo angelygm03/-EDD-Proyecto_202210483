@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>731</width>
-    <height>446</height>
+    <width>811</width>
+    <height>539</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>10</y>
+      <x>670</x>
+      <y>20</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -30,11 +30,16 @@
    <widget class="QTableWidget" name="tableWidget_usuarios">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>130</y>
-      <width>511</width>
-      <height>241</height>
+      <x>120</x>
+      <y>140</y>
+      <width>631</width>
+      <height>331</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
     </property>
     <property name="editTriggers">
      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
@@ -47,7 +52,7 @@
       <font>
        <family>Gill Sans MT</family>
        <pointsize>12</pointsize>
-       <bold>true</bold>
+       <bold>false</bold>
       </font>
      </property>
     </column>
@@ -59,7 +64,7 @@
       <font>
        <family>Gill Sans MT</family>
        <pointsize>12</pointsize>
-       <bold>true</bold>
+       <bold>false</bold>
       </font>
      </property>
     </column>
@@ -71,7 +76,7 @@
       <font>
        <family>Gill Sans MT</family>
        <pointsize>12</pointsize>
-       <bold>true</bold>
+       <bold>false</bold>
       </font>
      </property>
     </column>
@@ -83,30 +88,18 @@
       <font>
        <family>Gill Sans MT</family>
        <pointsize>12</pointsize>
-       <bold>true</bold>
-      </font>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Eliminar</string>
-     </property>
-     <property name="font">
-      <font>
-       <family>Gill Sans MT</family>
-       <pointsize>12</pointsize>
-       <bold>true</bold>
+       <bold>false</bold>
       </font>
      </property>
     </column>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="pushButton_2_buscar">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>80</y>
-      <width>83</width>
-      <height>29</height>
+      <x>162</x>
+      <y>90</y>
+      <width>111</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
@@ -119,26 +112,31 @@
      <string>Buscar</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="lineEdit_correo">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>80</y>
+      <x>280</x>
+      <y>90</y>
       <width>271</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox">
+   <widget class="QComboBox" name="comboBox_orden">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>80</y>
-      <width>131</width>
-      <height>28</height>
+      <x>570</x>
+      <y>90</y>
+      <width>161</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
@@ -149,7 +147,7 @@
     </property>
     <item>
      <property name="text">
-      <string>Seleccionar</string>
+      <string>Ninguno</string>
      </property>
     </item>
     <item>
@@ -171,9 +169,9 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>-10</y>
-      <width>431</width>
+      <x>270</x>
+      <y>0</y>
+      <width>291</width>
       <height>91</height>
      </rect>
     </property>
@@ -194,7 +192,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>731</width>
+     <width>811</width>
      <height>25</height>
     </rect>
    </property>

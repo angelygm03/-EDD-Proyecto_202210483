@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>SocialStructure</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -434,13 +434,13 @@
       <property name="title">
        <string>Fecha</string>
       </property>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QDateEdit" name="dateEdit_fechaBST">
        <property name="geometry">
         <rect>
-         <x>11</x>
+         <x>10</x>
          <y>40</y>
          <width>131</width>
-         <height>28</height>
+         <height>29</height>
         </rect>
        </property>
        <property name="font">
@@ -448,16 +448,11 @@
          <pointsize>10</pointsize>
         </font>
        </property>
-       <item>
-        <property name="text">
-         <string>Todos</string>
-        </property>
-       </item>
       </widget>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="pushButton_AplicarFecha">
        <property name="geometry">
         <rect>
-         <x>12</x>
+         <x>10</x>
          <y>90</y>
          <width>131</width>
          <height>29</height>
@@ -490,7 +485,7 @@
       <property name="title">
        <string>Recorrido</string>
       </property>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="comboBox_2_recorrido">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -504,6 +499,11 @@
          <pointsize>10</pointsize>
         </font>
        </property>
+       <item>
+        <property name="text">
+         <string>Ninguno</string>
+        </property>
+       </item>
        <item>
         <property name="text">
          <string>Preorden</string>
@@ -520,21 +520,11 @@
         </property>
        </item>
       </widget>
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QPushButton" name="pushButton_3_recorridoAplicar">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>70</y>
-         <width>131</width>
-         <height>28</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_3">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>100</y>
+         <y>90</y>
          <width>131</width>
          <height>29</height>
         </rect>
@@ -566,155 +556,69 @@
       <property name="title">
        <string>Feed</string>
       </property>
-      <widget class="QLabel" name="label_16">
+      <widget class="QPushButton" name="pushButton_6_verArbol">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>60</y>
-         <width>121</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Usuario: </string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_17">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>100</y>
-         <width>63</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Fecha: </string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_2_usuriopublicacion">
-       <property name="geometry">
-        <rect>
-         <x>110</x>
-         <y>60</y>
-         <width>251</width>
-         <height>28</height>
+         <x>330</x>
+         <y>480</y>
+         <width>191</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <pointsize>9</pointsize>
         </font>
        </property>
        <property name="text">
-        <string/>
+        <string>Ver árbol de comentarios </string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_3_fechapublicacion">
+      <widget class="QPushButton" name="pushButton_4_comentar">
        <property name="geometry">
         <rect>
-         <x>110</x>
-         <y>100</y>
-         <width>251</width>
-         <height>28</height>
+         <x>40</x>
+         <y>480</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Comentar</string>
+       </property>
+      </widget>
+      <widget class="QListWidget" name="listWidget_publicaciones">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>60</y>
+         <width>481</width>
+         <height>391</height>
         </rect>
        </property>
       </widget>
-      <widget class="QGroupBox" name="groupBox_6">
+      <widget class="QPushButton" name="pushButton_4_Comments">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>160</y>
-         <width>521</width>
-         <height>351</height>
+         <x>180</x>
+         <y>480</y>
+         <width>141</width>
+         <height>31</height>
         </rect>
        </property>
-       <property name="title">
-        <string>Publicación</string>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
        </property>
-       <widget class="QPlainTextEdit" name="plainTextEdit_contenidoPublicacion">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>50</y>
-          <width>261</width>
-          <height>231</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>Segoe UI</family>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="plainText">
-         <string/>
-        </property>
-       </widget>
-       <widget class="QGraphicsView" name="graphicsView_imagenpublicacion">
-        <property name="geometry">
-         <rect>
-          <x>290</x>
-          <y>50</y>
-          <width>221</width>
-          <height>231</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_4_comentar">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>300</y>
-          <width>141</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Comentar</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_5_vercomentarios">
-        <property name="geometry">
-         <rect>
-          <x>160</x>
-          <y>300</y>
-          <width>141</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Ver comentarios</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_6_verArbol">
-        <property name="geometry">
-         <rect>
-          <x>310</x>
-          <y>300</y>
-          <width>201</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Ver árbol de comentarios </string>
-        </property>
-       </widget>
+       <property name="text">
+        <string>Ver comentarios</string>
+       </property>
       </widget>
      </widget>
     </widget>
@@ -722,32 +626,12 @@
      <attribute name="title">
       <string>Solicitudes</string>
      </attribute>
-     <widget class="QLabel" name="label_7">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>20</y>
-        <width>491</width>
-        <height>91</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Cascadia Mono SemiBold</family>
-        <pointsize>24</pointsize>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Haz nuevos amigos</string>
-      </property>
-     </widget>
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
        <rect>
-        <x>110</x>
-        <y>160</y>
-        <width>641</width>
+        <x>210</x>
+        <y>190</y>
+        <width>551</width>
         <height>221</height>
        </rect>
       </property>
@@ -762,7 +646,7 @@
       <widget class="QTableWidget" name="tableWidget_recibidas">
        <property name="geometry">
         <rect>
-         <x>70</x>
+         <x>20</x>
          <y>40</y>
          <width>501</width>
          <height>171</height>
@@ -790,21 +674,406 @@
        </column>
       </widget>
      </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>0</y>
+        <width>351</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Cascadia Mono SemiBold</family>
+        <pointsize>24</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>SocialStructure</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_19">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>60</y>
+        <width>931</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Cascadia Mono SemiBold</family>
+        <pointsize>24</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>¡Haz nuevos amigos y comparte con ellos!</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_4_reportes">
      <attribute name="title">
       <string>Reportes</string>
      </attribute>
+     <widget class="QLabel" name="label_18">
+      <property name="geometry">
+       <rect>
+        <x>400</x>
+        <y>0</y>
+        <width>201</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Cascadia Mono SemiBold</family>
+        <pointsize>24</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Reportes</string>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_7">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>180</y>
+        <width>381</width>
+        <height>431</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>Top 3</string>
+      </property>
+      <widget class="QLabel" name="label_20">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>281</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Fechas con más publicaciones</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_21">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>240</y>
+         <width>281</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Publicaciones con más comentarios</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_22">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>80</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>1.</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_23">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>130</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>2.</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_24">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>180</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>3.</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_2_top1fecha">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>80</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_3_top2fecha">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>130</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_4_top3fecha">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>180</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_49">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>380</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>3.</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_50">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>280</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>1.</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_9_top2pub">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>330</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_51">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>330</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>2.</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_10_top1pub">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>280</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_11_top3pub">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>380</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_8">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>180</y>
+        <width>551</width>
+        <height>431</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>Árbol BST</string>
+      </property>
+      <widget class="QGraphicsView" name="graphicsView_bst">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>531</width>
+         <height>391</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_52">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>70</y>
+        <width>711</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Cascadia Code</family>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Observa los reportes y estadísticas del sistema</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_7_reportes">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>120</y>
+        <width>181</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Generar reportes</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_5_perfil">
      <attribute name="title">
       <string>Perfil</string>
      </attribute>
-     <widget class="QLineEdit" name="lineEdit_5_fechanac_2">
+     <widget class="QLineEdit" name="lineEdit_5_fechanacUsuario">
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>460</y>
+        <y>480</y>
         <width>401</width>
         <height>41</height>
        </rect>
@@ -820,7 +1089,7 @@
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>250</y>
+        <y>270</y>
         <width>121</width>
         <height>21</height>
        </rect>
@@ -840,7 +1109,7 @@
       <property name="geometry">
        <rect>
         <x>180</x>
-        <y>110</y>
+        <y>130</y>
         <width>271</width>
         <height>21</height>
        </rect>
@@ -860,7 +1129,7 @@
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>160</y>
+        <y>180</y>
         <width>121</width>
         <height>21</height>
        </rect>
@@ -876,11 +1145,11 @@
        <string>Nombres</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_3_apellidos_2">
+     <widget class="QLineEdit" name="lineEdit_3_apellidosUsuario">
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>280</y>
+        <y>300</y>
         <width>401</width>
         <height>41</height>
        </rect>
@@ -892,11 +1161,11 @@
        </font>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_4_correo_2">
+     <widget class="QLineEdit" name="lineEdit_4_correoUsuario">
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>370</y>
+        <y>390</y>
         <width>401</width>
         <height>41</height>
        </rect>
@@ -908,14 +1177,14 @@
        </font>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_2_nombres_2">
+     <widget class="QLineEdit" name="lineEdit_2_nombreUsuario">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>190</y>
+        <y>210</y>
         <width>401</width>
         <height>41</height>
        </rect>
@@ -934,7 +1203,7 @@
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>340</y>
+        <y>360</y>
         <width>121</width>
         <height>21</height>
        </rect>
@@ -954,7 +1223,7 @@
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>430</y>
+        <y>450</y>
         <width>251</width>
         <height>21</height>
        </rect>
@@ -988,6 +1257,24 @@
       </property>
       <property name="text">
        <string>Mi Perfil</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_2_eliminar">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>540</y>
+        <width>401</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Eliminar Perfil</string>
       </property>
      </widget>
     </widget>

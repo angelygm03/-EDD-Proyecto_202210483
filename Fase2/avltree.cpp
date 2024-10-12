@@ -124,8 +124,6 @@ void AVLTree::graph() {
     outfile << "}" << std::endl;
     outfile.close();
     int returnCode = system("dot -Tpng avltree.dot -o avltree.png");
-    std::system("start avltree.png");
-
 
     if (returnCode == 0) {
         std::cout << "Command executed successfully." << std::endl;
@@ -173,5 +171,121 @@ bool AVLTree::verificarCredenciales(const string& correo, const string& contrase
     return false;  // Credenciales incorrectas
 }
 
+void AVLTree::preorden(Node* node, QTableWidget* table, int& row) {
+    if (node != nullptr) {
+        // Agregar el nodo actual a la tabla
+        table->insertRow(row);
+        table->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(node->nombres)));
+        table->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(node->apellidos)));
+        table->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(node->correo)));
+        table->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(node->fechaNacimiento)));
+
+        // Centrar el texto en las celdas
+        for (int i = 0; i < 4; i++) {
+            QTableWidgetItem* item = table->item(row, i);
+            if (item) {
+                item->setTextAlignment(Qt::AlignCenter);
+            }
+        }
+
+        row++; // Incrementar el índice de la fila
+        preorden(node->left, table, row);   // Recorrer el subárbol izquierdo
+        preorden(node->right, table, row);  // Recorrer el subárbol derecho
+    }
+}
+
+void AVLTree::inorden(Node* node, QTableWidget* table, int& row) {
+    if (node != nullptr) {
+        inorden(node->left, table, row);   // Recorrer el subárbol izquierdo
+
+        // Agregar el nodo actual a la tabla
+        table->insertRow(row);
+        table->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(node->nombres)));
+        table->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(node->apellidos)));
+        table->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(node->correo)));
+        table->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(node->fechaNacimiento)));
+
+        // Centrar el texto en las celdas
+        for (int i = 0; i < 4; i++) {
+            QTableWidgetItem* item = table->item(row, i);
+            if (item) {
+                item->setTextAlignment(Qt::AlignCenter);
+            }
+        }
+
+        row++; // Incrementar el índice de la fila
+        inorden(node->right, table, row);  // Recorrer el subárbol derecho
+    }
+}
+
+void AVLTree::postorden(Node* node, QTableWidget* table, int& row) {
+    if (node != nullptr) {
+        postorden(node->left, table, row);  // Recorrer el subárbol izquierdo
+        postorden(node->right, table, row); // Recorrer el subárbol derecho
+
+        // Agregar el nodo actual a la tabla
+        table->insertRow(row);
+        table->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(node->nombres)));
+        table->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(node->apellidos)));
+        table->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(node->correo)));
+        table->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(node->fechaNacimiento)));
+
+        // Centrar el texto en las celdas
+        for (int i = 0; i < 4; i++) {
+            QTableWidgetItem* item = table->item(row, i);
+            if (item) {
+                item->setTextAlignment(Qt::AlignCenter);
+            }
+        }
+
+        row++; // Incrementar el índice de la fila
+    }
+}
+
+Node* AVLTree::eliminarPorCorreo(Node* root, const string& correo, bool& decrease) {
+    if (root == nullptr) {
+        return nullptr; // El nodo no existe
+    }
+
+    if (correo < root->correo) {
+        root->left = eliminarPorCorreo(root->left, correo, decrease);
+    } else if (correo > root->correo) {
+        root->right = eliminarPorCorreo(root->right, correo, decrease);
+    } else {
+        // Nodo a eliminar encontrado
+        Node* nodoAEliminar = root;
+
+        // Caso 1: No tiene hijos (hoja)
+        if (root->left == nullptr && root->right == nullptr) {
+            delete root;
+            return nullptr; // Eliminamos el nodo
+        }
+
+        // Caso 2: Un hijo
+        if (root->left == nullptr) {
+            root = root->right; // Reemplaza el nodo por su hijo derecho
+        } else if (root->right == nullptr) {
+            root = root->left; // Reemplaza el nodo por su hijo izquierdo
+        } else {
+            // Caso 3: Dos hijos
+            Node* successor = root->right; // El sucesor es el más pequeño en el subárbol derecho
+            while (successor->left != nullptr) {
+                successor = successor->left;
+            }
+            root->correo = successor->correo; // Reemplazar el nodo a eliminar por su sucesor
+            // Eliminar el sucesor
+            root->right = eliminarPorCorreo(root->right, successor->correo, decrease);
+        }
+
+        delete nodoAEliminar; // Liberar memoria
+        decrease = true; // Indicar que hemos eliminado un nodo
+    }
+    return root;
+}
+
+void AVLTree::eliminarPorCorreo(const string& correo) {
+    bool decrease = false;
+    root = eliminarPorCorreo(root, correo, decrease);
+}
 
 

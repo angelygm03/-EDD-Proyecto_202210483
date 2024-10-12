@@ -8,6 +8,7 @@ Node::Node(string nombres, string apellidos, string fechaNacimiento,
     this->fechaNacimiento = fechaNacimiento;
     this->correo = correo;
     this->contrasena = contrasena;
+    publicaciones = new BinarySearchTree();
 
     left = nullptr;
     right = nullptr;
@@ -17,4 +18,5 @@ Node::Node(string nombres, string apellidos, string fechaNacimiento,
 Node::~Node() {
     delete left;
     delete right;
+    delete publicaciones;
 }

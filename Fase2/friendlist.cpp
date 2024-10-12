@@ -38,3 +38,14 @@ int FriendList::countFriends() const {
     }
     return count;
 }
+
+bool FriendList::esAmigo(const std::string& email) const {
+    FriendNode* temp = head;
+    while (temp != nullptr) {
+        if (temp->friendEmail == email) {
+            return true;  // El amigo está en la lista
+        }
+        temp = temp->next;
+    }
+    return false;  // El amigo no está en la lista
+}

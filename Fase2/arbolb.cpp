@@ -1,4 +1,5 @@
 #include "arbolb.h"
+#include <fstream>
 
 // Constructor del nodo
 NodoB::NodoB(bool esHoja) {
@@ -63,6 +64,38 @@ void NodoB::dividirNodo(int i, NodoB* y) {
     comentarios[i] = y->comentarios[2];
 
     numComentarios++;
+}
+
+void NodoB::graficar(std::ofstream &file) {
+    if (hoja) { // Nodo hoja
+        for (int i = 0; i < numComentarios; i++) {
+            file << "    \"" << comentarios[i]->correo << "\" [label=\"" << comentarios[i]->comentario << "\"];\n";
+        }
+    }
+    else {
+        for (int i = 0; i < numComentarios; i++) {
+            file << "    \"" << comentarios[i]->correo << "\";\n";
+            // Conectar con el hijo izquierdo
+            if (hijos[i] != nullptr) {
+                file << "    \"" << comentarios[i]->correo << "\" -> \"" << hijos[i]->comentarios[0]->correo << "\";\n";
+                hijos[i]->graficar(file);
+            }
+        }
+        // Conectar al último hijo
+        if (hijos[numComentarios] != nullptr) {
+            hijos[numComentarios]->graficar(file);
+        }
+    }
+}
+
+void ArbolB::graficar(const std::string &filename) {
+    std::ofstream file(filename);
+    file << "digraph G {\n";
+    if (raiz != nullptr) {
+        raiz->graficar(file);
+    }
+    file << "}\n";
+    file.close();
 }
 
 // Constructor del Árbol B
