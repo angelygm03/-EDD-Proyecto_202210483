@@ -54,9 +54,9 @@ private slots:
 
     void on_pushButton_4_Comments_clicked();
 
-    void on_pushButton_2_eliminar_clicked();
-
     void on_pushButton_6_verArbol_clicked();
+
+    void on_pushButton_actualizarDatos_clicked();
 
 private:
     Ui::Userwindow *ui;

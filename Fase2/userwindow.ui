@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="tab_buscar">
      <attribute name="title">
@@ -1072,8 +1072,8 @@
      <widget class="QLineEdit" name="lineEdit_5_fechanacUsuario">
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>480</y>
+        <x>270</x>
+        <y>390</y>
         <width>401</width>
         <height>41</height>
        </rect>
@@ -1088,47 +1088,7 @@
      <widget class="QLabel" name="label_8">
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>270</y>
-        <width>121</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Cascadia Code SemiBold</family>
-        <pointsize>14</pointsize>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Apellidos</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_9">
-      <property name="geometry">
-       <rect>
-        <x>180</x>
-        <y>130</y>
-        <width>271</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Cascadia Code SemiBold</family>
-        <pointsize>16</pointsize>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Datos del usuario</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_10">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
+        <x>270</x>
         <y>180</y>
         <width>121</width>
         <height>21</height>
@@ -1137,7 +1097,27 @@
       <property name="font">
        <font>
         <family>Cascadia Code SemiBold</family>
-        <pointsize>14</pointsize>
+        <pointsize>12</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Apellidos</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>90</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Cascadia Code SemiBold</family>
+        <pointsize>12</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -1148,8 +1128,8 @@
      <widget class="QLineEdit" name="lineEdit_3_apellidosUsuario">
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>300</y>
+        <x>270</x>
+        <y>210</y>
         <width>401</width>
         <height>41</height>
        </rect>
@@ -1164,8 +1144,8 @@
      <widget class="QLineEdit" name="lineEdit_4_correoUsuario">
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>390</y>
+        <x>270</x>
+        <y>300</y>
         <width>401</width>
         <height>41</height>
        </rect>
@@ -1183,8 +1163,8 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>210</y>
+        <x>270</x>
+        <y>120</y>
         <width>401</width>
         <height>41</height>
        </rect>
@@ -1202,8 +1182,8 @@
      <widget class="QLabel" name="label_11">
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>360</y>
+        <x>270</x>
+        <y>270</y>
         <width>121</width>
         <height>21</height>
        </rect>
@@ -1211,7 +1191,7 @@
       <property name="font">
        <font>
         <family>Cascadia Code SemiBold</family>
-        <pointsize>14</pointsize>
+        <pointsize>12</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -1222,8 +1202,8 @@
      <widget class="QLabel" name="label_12">
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>450</y>
+        <x>270</x>
+        <y>360</y>
         <width>251</width>
         <height>21</height>
        </rect>
@@ -1231,7 +1211,7 @@
       <property name="font">
        <font>
         <family>Cascadia Code SemiBold</family>
-        <pointsize>14</pointsize>
+        <pointsize>12</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -1242,10 +1222,10 @@
      <widget class="QLabel" name="label_13">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>10</y>
-        <width>251</width>
-        <height>91</height>
+        <x>350</x>
+        <y>20</y>
+        <width>221</width>
+        <height>51</height>
        </rect>
       </property>
       <property name="font">
@@ -1259,11 +1239,47 @@
        <string>Mi Perfil</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_2_eliminar">
+     <widget class="QLabel" name="label_16">
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>540</y>
+        <x>270</x>
+        <y>450</y>
+        <width>251</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Cascadia Code SemiBold</family>
+        <pointsize>12</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Contraseña</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_6_contrasena">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>480</y>
+        <width>401</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Gill Sans MT</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_actualizarDatos">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>550</y>
         <width>401</width>
         <height>41</height>
        </rect>
@@ -1274,7 +1290,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Eliminar Perfil</string>
+       <string>Actualizar</string>
       </property>
      </widget>
     </widget>

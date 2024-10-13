@@ -25,6 +25,7 @@ Userwindow::Userwindow(QWidget *parent, AVLTree *usuariosAVL, Node *usuarioActua
     comentariosTree(comentariosTree) // Aquí inicializa el puntero
 {
     ui->setupUi(this);
+        connect(ui->pushButton_actualizarDatos, &QPushButton::clicked, this, &Userwindow::on_pushButton_actualizarDatos_clicked);
     if (usuarioActual != nullptr) {
         this->bst = usuarioActual->publicaciones;
         qDebug() << "Usuario logeado:" << QString::fromStdString(usuarioActual->correo);
@@ -34,6 +35,7 @@ Userwindow::Userwindow(QWidget *parent, AVLTree *usuariosAVL, Node *usuarioActua
         ui->lineEdit_3_apellidosUsuario->setText(QString::fromStdString(usuarioActual->apellidos));
         ui->lineEdit_4_correoUsuario->setText(QString::fromStdString(usuarioActual->correo));
         ui->lineEdit_5_fechanacUsuario->setText(QString::fromStdString(usuarioActual->fechaNacimiento));
+        ui->lineEdit_6_contrasena->setText(QString::fromStdString(usuarioActual->contrasena));
 
         // Llenar la pila de solicitudes del usuario actual
         pilaSolicitudes = &usuarioActual->solicitudes;
@@ -602,29 +604,6 @@ void Userwindow::contarPublicacionesPorFechaNodo(NodeBST* nodo, std::map<std::st
     contarPublicacionesPorFechaNodo(nodo->right, conteoFechas); // Recorrido a la derecha
 }
 
-void Userwindow::on_pushButton_2_eliminar_clicked() {
-    if (usuarioActual == nullptr) {
-        QMessageBox::warning(this, "Error", "No hay usuario actual para eliminar.");
-        return;
-    }
-
-    // Confirmar si el usuario quiere eliminar su cuenta
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Confirmar Eliminación",
-                                  "¿Está seguro de que desea eliminar su cuenta?",
-                                  QMessageBox::Yes | QMessageBox::No);
-
-    if (reply == QMessageBox::Yes) {
-        // Eliminar el usuario del árbol AVL
-        usuariosAVL->eliminarPorCorreo(usuarioActual->correo);
-
-        QMessageBox::information(this, "Cuenta Eliminada", "Tu cuenta ha sido eliminada exitosamente.");
-
-        // Cerrar la ventana actual o redirigir a la ventana de inicio de sesión, etc.
-        this->close();
-    }
-}
-
 
 void Userwindow::on_pushButton_6_verArbol_clicked()
 {
@@ -656,3 +635,61 @@ void Userwindow::on_pushButton_6_verArbol_clicked()
     imageWindow->show();
 }
 
+
+void Userwindow::on_pushButton_actualizarDatos_clicked()
+{
+    qDebug() << "Se ha llamado a la función de actualización.";
+
+    if (usuarioActual == nullptr) {
+        QMessageBox::warning(this, "Error", "No hay usuario actual para actualizar.");
+        return;
+    }
+
+    QString nuevoNombre = ui->lineEdit_2_nombreUsuario->text();
+    QString nuevosApellidos = ui->lineEdit_3_apellidosUsuario->text();
+    QString nuevaFechaNac = ui->lineEdit_5_fechanacUsuario->text();
+    QString nuevaContrasena = ui->lineEdit_6_contrasena->text();
+
+    // Imprimir los valores leídos para verificar
+    qDebug() << "Valores leídos:";
+    qDebug() << "Nombre:" << nuevoNombre;
+    qDebug() << "Apellidos:" << nuevosApellidos;
+    qDebug() << "Fecha de Nacimiento:" << nuevaFechaNac;
+    qDebug() << "Contraseña:" << nuevaContrasena;
+
+    bool actualizado = false;
+
+    // Comparar y actualizar solo si hay cambios
+    if (QString::fromStdString(usuarioActual->nombres) != nuevoNombre) {
+        usuarioActual->nombres = nuevoNombre.toStdString();
+        actualizado = true;
+        qDebug() << "Nombre actualizado.";
+    }
+    if (QString::fromStdString(usuarioActual->apellidos) != nuevosApellidos) {
+        usuarioActual->apellidos = nuevosApellidos.toStdString();
+        actualizado = true;
+        qDebug() << "Apellidos actualizados.";
+    }
+    if (QString::fromStdString(usuarioActual->fechaNacimiento) != nuevaFechaNac) {
+        usuarioActual->fechaNacimiento = nuevaFechaNac.toStdString();
+        actualizado = true;
+        qDebug() << "Fecha de nacimiento actualizada.";
+    }
+    if (QString::fromStdString(usuarioActual->contrasena) != nuevaContrasena) {
+        usuarioActual->contrasena = nuevaContrasena.toStdString();
+        actualizado = true;
+        qDebug() << "Contraseña actualizada.";
+    }
+
+    // Muestra el mensaje según el estado de 'actualizado'
+    if (actualizado) {
+        qDebug() << "Actualizando información en el AVL.";
+        usuariosAVL->eliminarPorCorreo(usuarioActual->correo);
+        usuariosAVL->insert(usuarioActual->nombres, usuarioActual->apellidos,
+                            usuarioActual->fechaNacimiento, usuarioActual->correo,
+                            usuarioActual->contrasena);
+        QMessageBox::information(this, "Actualización exitosa", "La información de usuario ha sido actualizada.");
+    } else {
+        qDebug() << "No se realizaron cambios.";
+    }
+}
