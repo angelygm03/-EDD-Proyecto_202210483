@@ -12,7 +12,7 @@ AdjacencyList::~AdjacencyList() {
     while (current) {
         UserNode* toDelete = current;
         current = current->next; // Mover al siguiente nodo
-        delete toDelete; // Liberar memoria del nodo UserNode y sus neighbors
+        delete toDelete; // Liberar memoria
     }
 }
 
@@ -30,7 +30,7 @@ void AdjacencyList::insert(const string& userName) {
     }
 }
 
-// Crear una conexión (amistad) entre dos usuarios
+// Crear una conexión entre dos usuarios
 void AdjacencyList::createConnection(const string& userName1, const string& userName2) {
     UserNode* current = head;
     while (current) {
@@ -72,7 +72,7 @@ void AdjacencyList::graph(const string &filename) {
     out << "}\n";
     out.close();
 
-    // Comando para generar la imagen (Graphviz debe estar instalado)
+    //generar la imagen
     string command = "dot -Tpng " + filename + ".dot -o " + filename + ".png";
     int result = system(command.c_str());
 

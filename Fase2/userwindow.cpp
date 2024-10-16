@@ -10,9 +10,12 @@
 #include <iostream>
 #include <string>
 #include "imagewindow.h"
-#include <map>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
+#include <map>
 #include <algorithm>
+using namespace std;
 
 Userwindow::Userwindow(QWidget *parent, AVLTree *usuariosAVL, Node *usuarioActual, DoubleList* publicacionesList, BinarySearchTree *bst, ArbolB* comentariosTree)
     : QMainWindow(parent),
@@ -41,9 +44,11 @@ Userwindow::Userwindow(QWidget *parent, AVLTree *usuariosAVL, Node *usuarioActua
         pilaSolicitudes = &usuarioActual->solicitudes;
         populateSolicitudesTable();
 
-
         // Llenar el listWidget_publicaciones con las publicaciones del árbol
         populatePublicacionesList();
+
+        //Llena la tabla de las sugerencias de amistad
+        mostrarSugerenciasDeAmistad();
     }
 }
 
@@ -166,11 +171,11 @@ void Userwindow::aceptarSolicitud()
         Node* usuarioEmisor = usuariosAVL->buscarPorCorreo(emisor.toStdString());
         if (usuarioEmisor != nullptr) {
             usuarioEmisor->friends.addFriend(usuarioActual->correo); // Añadir el receptor a la lista de amigos del emisor
-            std::cout << "Amistad aceptada: " << emisor.toStdString() << " añadido a la lista de amigos de " << usuarioActual->correo << std::endl;
+            cout << "Amistad aceptada: " << emisor.toStdString() << " añadido a la lista de amigos de " << usuarioActual->correo << endl;
             // Crear la conexión en el grafo
             usuarioActual->adjacencyList->createConnection(usuarioActual->correo, emisor.toStdString());
             usuarioEmisor->adjacencyList->createConnection(emisor.toStdString(), usuarioActual->correo);
-            std::cout << "Amistad aceptada: " << usuarioActual->correo << " añadido al grafo de amigos de " << emisor.toStdString() << std::endl;
+            cout << "Amistad aceptada: " << usuarioActual->correo << " añadido al grafo de amigos de " << emisor.toStdString() << endl;
         }
     }
 
@@ -248,11 +253,11 @@ void Userwindow::on_pushButton_2_agregar_clicked() {
 
     // Agregar la solicitud a la pila del receptor
     usuarioReceptor->solicitudes.push(usuarioActual->correo, usuarioReceptor->correo, "PENDIENTE");
-    std::cout << "Solicitud enviada a " << usuarioReceptor->correo << std::endl;
+    cout << "Solicitud enviada a " << usuarioReceptor->correo << endl;
 
     // Agregar la solicitud a la lista de solicitudes enviadas del emisor (usuarioActual)
     usuarioActual->solicitudListEnviadas.insert(usuarioActual->correo, usuarioReceptor->correo, "PENDIENTE");
-    std::cout << "Solicitud añadida a la lista de solicitudes enviadas de " << usuarioActual->correo << std::endl;
+    cout << "Solicitud añadida a la lista de solicitudes enviadas de " << usuarioActual->correo << endl;
 
     QMessageBox::information(this, "Solicitud Enviada", "Se ha enviado la solicitud de amistad correctamente.");
 }
@@ -317,14 +322,14 @@ void Userwindow::on_pushButton_abrirImg_clicked()
 
 void Userwindow::graficarPublicacionesConAmigos() {
     // Graficar publicaciones del usuario actual
-    std::string imagenUsuario = usuarioActual->publicaciones->graficarArbol("publicaciones_" + usuarioActual->correo);
+    string imagenUsuario = usuarioActual->publicaciones->graficarArbol("publicaciones_" + usuarioActual->correo);
 
     // Ahora graficamos las publicaciones de los amigos
     FriendNode* currentFriend = usuarioActual->friends.head;
     while (currentFriend != nullptr) {
         Node* amigoNode = usuariosAVL->buscarPorCorreo(currentFriend->friendEmail);
         if (amigoNode != nullptr && amigoNode->publicaciones != nullptr) {
-            std::string imagenAmigo = amigoNode->publicaciones->graficarArbol("publicaciones_" + amigoNode->correo);
+            string imagenAmigo = amigoNode->publicaciones->graficarArbol("publicaciones_" + amigoNode->correo);
             // Aquí podrías combinar las imágenes de las publicaciones si es necesario
         }
         currentFriend = currentFriend->next;
@@ -372,7 +377,7 @@ void Userwindow::populatePublicacionesList() {
     }
 }
 
-void Userwindow::mostrarPublicacionesDelUsuario(const std::string& userEmail) {
+void Userwindow::mostrarPublicacionesDelUsuario(const string& userEmail) {
     qDebug() << "Mostrando publicaciones del usuario:" << QString::fromStdString(userEmail);
 
     Node* amigoNode = usuariosAVL->buscarPorCorreo(userEmail);
@@ -391,7 +396,7 @@ void Userwindow::mostrarPublicacionesDelUsuario(const std::string& userEmail) {
 }
 
 // El método para buscar publicaciones en el BST por las fechas y el correo del usuario
-void Userwindow::mostrarPublicacionesPorFecha(NodeBST* nodo, const std::string& userEmail) {
+void Userwindow::mostrarPublicacionesPorFecha(NodeBST* nodo, const string& userEmail) {
     if (nodo == nullptr) return; // Si el nodo es nulo, no hay publicaciones.
 
     // Recurriendo a la izquierda
@@ -416,7 +421,7 @@ void Userwindow::mostrarPublicacionesPorFecha(NodeBST* nodo, const std::string& 
     mostrarPublicacionesPorFecha(nodo->right, userEmail);
 }
 
-NodeBST* Userwindow::buscarNodoPorFecha(NodeBST* node, const std::string& fecha) {
+NodeBST* Userwindow::buscarNodoPorFecha(NodeBST* node, const string& fecha) {
     if (node == nullptr) {
         return nullptr;
     }
@@ -459,7 +464,7 @@ void Userwindow::imprimirNodosBST(NodeBST* node) {
     if (node == nullptr) return;
 
     imprimirNodosBST(node->left); // Recursión hacia la izquierda
-    std::cout << "Fecha: " << node->fecha << std::endl; // Imprimir la fecha
+    cout << "Fecha: " << node->fecha << endl; // Imprimir la fecha
     imprimirNodosBST(node->right); // Recursión hacia la derecha
 }
 
@@ -478,10 +483,10 @@ void Userwindow::on_pushButton_AplicarFecha_clicked()
 
     NodeBST* nodoFecha = buscarNodoPorFecha(bst->root, fechaStr.toStdString());
     if (nodoFecha != nullptr) {
-        std::cout << "Se encontró un nodo para la fecha: " << fechaStr.toStdString() << std::endl;
+        cout << "Se encontró un nodo para la fecha: " << fechaStr.toStdString() << endl;
         mostrarPublicacionesEnListWidget(nodoFecha);
     } else {
-        std::cout << "No se encontró un nodo para la fecha: " << fechaStr.toStdString() << std::endl;
+        cout << "No se encontró un nodo para la fecha: " << fechaStr.toStdString() << endl;
         QMessageBox::information(this, "Sin Publicaciones", "No hay publicaciones para la fecha seleccionada.");
     }
 }
@@ -516,11 +521,11 @@ void Userwindow::on_pushButton_3_recorridoAplicar_clicked()
 
 void Userwindow::on_pushButton_4_Comments_clicked()
 {
-    std::string nombreArchivoDot = "arbolB.dot";
+    string nombreArchivoDot = "arbolB.dot";
     comentariosTree->graficar(nombreArchivoDot);
 
-    std::string nombreArchivoImagen = "arbolB.png";
-    std::string comando = "dot -Tpng " + nombreArchivoDot + " -o " + nombreArchivoImagen;
+    string nombreArchivoImagen = "arbolB.png";
+    string comando = "dot -Tpng " + nombreArchivoDot + " -o " + nombreArchivoImagen;
     system(comando.c_str()); // Llamar a Graphviz para generar la imagen
 
     ImageWindow *imageWindow = new ImageWindow(QString::fromStdString(nombreArchivoImagen));
@@ -535,7 +540,7 @@ void Userwindow::mostrarTop3Fechas() {
         return;
     }
 
-    std::map<std::string, int> conteoFechas;
+    map<string, int> conteoFechas;
 
     // Contar publicaciones del usuario actual
     contarPublicacionesPorFecha(usuarioActual, conteoFechas);
@@ -549,10 +554,10 @@ void Userwindow::mostrarTop3Fechas() {
     }
 
     // Crear un vector de pares para ordenar
-    std::vector<std::pair<std::string, int>> fechasConConteo(conteoFechas.begin(), conteoFechas.end());
+    vector<pair<string, int>> fechasConConteo(conteoFechas.begin(), conteoFechas.end());
 
     // Ordenar por conteo (más publicaciones primero)
-    std::sort(fechasConConteo.begin(), fechasConConteo.end(), [](const auto& a, const auto& b) {
+    sort(fechasConConteo.begin(), fechasConConteo.end(), [](const auto& a, const auto& b) {
         return a.second > b.second; // Ordenar de mayor a menor
     });
 
@@ -578,14 +583,14 @@ void Userwindow::mostrarTop3Fechas() {
     }
 }
 
-void Userwindow::contarPublicacionesPorFecha(Node* usuario, std::map<std::string, int>& conteoFechas) {
+void Userwindow::contarPublicacionesPorFecha(Node* usuario, map<string, int>& conteoFechas) {
     if (!usuario || !usuario->publicaciones) return;
 
     // Recorre el árbol y cuenta por fecha
     contarPublicacionesPorFechaNodo(usuario->publicaciones->root, conteoFechas);
 }
 
-void Userwindow::contarPublicacionesPorFechaNodo(NodeBST* nodo, std::map<std::string, int>& conteoFechas) {
+void Userwindow::contarPublicacionesPorFechaNodo(NodeBST* nodo, map<string, int>& conteoFechas) {
     if (!nodo) return; // Si el nodo es nulo, retorna.
 
     contarPublicacionesPorFechaNodo(nodo->left, conteoFechas); // Recorrido a la izquierda
@@ -616,12 +621,12 @@ void Userwindow::on_pushButton_6_verArbol_clicked()
     }
 
     // Generar el archivo .dot para el árbol B
-    std::string nombreArchivoDot = "arbolB.dot";
+    string nombreArchivoDot = "arbolB.dot";
     comentariosTree->graficar(nombreArchivoDot);
 
     // Generar la imagen PNG a partir del archivo .dot
-    std::string nombreArchivoImagen = "arbolB.png";
-    std::string comando = "dot -Tpng " + nombreArchivoDot + " -o " + nombreArchivoImagen;
+    string nombreArchivoImagen = "arbolB.png";
+    string comando = "dot -Tpng " + nombreArchivoDot + " -o " + nombreArchivoImagen;
     int resultCode = system(comando.c_str()); // Ejecutar el comando
 
     // Verificar si el comando se ejecutó correctamente
@@ -691,5 +696,90 @@ void Userwindow::on_pushButton_actualizarDatos_clicked()
         QMessageBox::information(this, "Actualización exitosa", "La información de usuario ha sido actualizada.");
     } else {
         qDebug() << "No se realizaron cambios.";
+    }
+}
+
+// Método para mostrar sugerencias de amistad
+// Método para mostrar sugerencias de amistad
+void Userwindow::mostrarSugerenciasDeAmistad() {
+    if (!usuarioActual || !usuariosAVL) {
+        QMessageBox::warning(this, "Error", "El usuario actual o la estructura de usuarios no están inicializados.");
+        return;
+    }
+
+    ui->tableWidget_sugerencias->setRowCount(0); // Limpiar la tabla de sugerencias
+    unordered_map<string, int> sugerencias; // Mapa para contar amigos en común
+
+    // Conjunto para evitar sugerencias duplicadas
+    unordered_set<string> amigosActuales;
+    for (FriendNode* f = usuarioActual->friends.head; f != nullptr; f = f->next) {
+        amigosActuales.insert(f->friendEmail);
+    }
+
+    // Recorrer amigos del usuario actual
+    for (FriendNode* f = usuarioActual->friends.head; f != nullptr; f = f->next) {
+        Node* amigo = usuariosAVL->buscarPorCorreo(f->friendEmail);
+        if (!amigo) continue; // Si no se encuentra el amigo (por algún motivo)
+
+        // Ahora recorrer los amigos del amigo
+        for (FriendNode* amigoDeAmigo = amigo->friends.head; amigoDeAmigo != nullptr; amigoDeAmigo = amigoDeAmigo->next) {
+            // Ignorar si el amigo de amigo es el mismo usuario actual o ya es amigo
+            if (amigosActuales.count(amigoDeAmigo->friendEmail) || amigoDeAmigo->friendEmail == usuarioActual->correo) {
+                continue;
+            }
+
+            // Si el amigo de amigo no está en el mapa de sugerencias, inicializarlo
+            if (sugerencias.find(amigoDeAmigo->friendEmail) == sugerencias.end()) {
+                sugerencias[amigoDeAmigo->friendEmail] = 0;
+            }
+
+            // Contar amigos en común
+            sugerencias[amigoDeAmigo->friendEmail]++;
+        }
+    }
+
+    // Convertir a un vector para poder ordenar
+    vector<pair<string, int>> sugerenciasOrdenadas(sugerencias.begin(), sugerencias.end());
+
+    // Ordenar las sugerencias desde la más alta a la más baja en base a amigos en común
+    sort(sugerenciasOrdenadas.begin(), sugerenciasOrdenadas.end(), [](const auto& a, const auto& b) {
+        return a.second > b.second; // Ordenar en orden descendente
+    });
+
+    // Llenar el QTableWidget
+    for (const auto& sugerencia : sugerenciasOrdenadas) {
+        const string& correoSugerido = sugerencia.first;
+        const int amigosEnComun = sugerencia.second;
+
+        Node* usuarioSugerido = usuariosAVL->buscarPorCorreo(correoSugerido);
+        if (usuarioSugerido) {
+            int rowCount = ui->tableWidget_sugerencias->rowCount();
+            ui->tableWidget_sugerencias->insertRow(rowCount);
+
+            // Mostrar el nombre y apellido del usuario sugerido
+            ui->tableWidget_sugerencias->setItem(rowCount, 0, new QTableWidgetItem(QString::fromStdString(usuarioSugerido->nombres)));
+            ui->tableWidget_sugerencias->setItem(rowCount, 1, new QTableWidgetItem(QString::fromStdString(usuarioSugerido->apellidos)));
+            ui->tableWidget_sugerencias->setItem(rowCount, 2, new QTableWidgetItem(QString::number(amigosEnComun))); // Amigos en común
+
+            // Crear botón para enviar solicitud
+            QPushButton* botonSolicitud = new QPushButton("Agregar");
+            connect(botonSolicitud, &QPushButton::clicked, [this, correoSugerido, usuarioSugerido]() {
+                // Agregar la solicitud a la pila del receptor
+                usuarioSugerido->solicitudes.push(usuarioActual->correo, correoSugerido, "PENDIENTE");
+                cout << "Solicitud enviada a " << correoSugerido << endl;
+
+                // Agregar la solicitud a la lista de solicitudes enviadas del emisor (usuarioActual)
+                usuarioActual->solicitudListEnviadas.insert(usuarioActual->correo, correoSugerido, "PENDIENTE");
+                cout << "Solicitud añadida a la lista de solicitudes enviadas de " << usuarioActual->correo << endl;
+
+                QMessageBox::information(this, "Solicitud Enviada", "Se ha enviado la solicitud de amistad correctamente.");
+
+                // Eliminar la sugerencia de la tabla
+                int rowCount = ui->tableWidget_sugerencias->rowCount();
+                ui->tableWidget_sugerencias->removeRow(rowCount);
+            });
+
+            ui->tableWidget_sugerencias->setCellWidget(rowCount, 3, botonSolicitud);
+        }
     }
 }

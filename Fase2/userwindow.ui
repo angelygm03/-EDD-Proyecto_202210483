@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_buscar">
      <attribute name="title">
@@ -630,7 +630,7 @@
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>190</y>
+        <y>160</y>
         <width>551</width>
         <height>221</height>
        </rect>
@@ -648,7 +648,7 @@
         <rect>
          <x>20</x>
          <y>40</y>
-         <width>501</width>
+         <width>521</width>
          <height>171</height>
         </rect>
        </property>
@@ -713,6 +713,54 @@
       <property name="text">
        <string>¡Haz nuevos amigos y comparte con ellos!</string>
       </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_6">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>400</y>
+        <width>611</width>
+        <height>221</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>Personas que quizás conozcas</string>
+      </property>
+      <widget class="QTableWidget" name="tableWidget_sugerencias">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>591</width>
+         <height>171</height>
+        </rect>
+       </property>
+       <column>
+        <property name="text">
+         <string>Nombres</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Apellidos</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Amigos en común</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string/>
+        </property>
+       </column>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_4_reportes">

@@ -31,6 +31,8 @@ public:
     void contarPublicacionesPorFecha(Node* usuario, std::map<std::string, int>& conteoFechas);
     void contarPublicacionesPorFechaNodo(NodeBST* nodo, std::map<std::string, int>& conteoFechas);
     void imprimirFechasBST(NodeBST* nodo);
+    void mostrarSugerenciasDeAmistad();
+
 private slots:
     // Funciones para manejar los eventos de la interfaz
     void on_pushButton_2_buscar_clicked();
