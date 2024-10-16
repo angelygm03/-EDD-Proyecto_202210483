@@ -5,6 +5,7 @@
 #include "stack.h"
 #include "solicitudlist.h"
 #include "friendlist.h"
+#include "adjacencylist.h"
 #include "binarysearchtree.h"
 
 using namespace std;
@@ -22,6 +23,7 @@ public:
     Stack solicitudes; //pila de solicitudes recibidas
     SolicitudList solicitudListEnviadas; //lista de solicitudes enviadas
     FriendList friends; //lista de amigos
+    AdjacencyList* adjacencyList; // Grafo de amigos
     BinarySearchTree* publicaciones; //árbol de publicaciones
 
     // Constructor para inicializar el nodo

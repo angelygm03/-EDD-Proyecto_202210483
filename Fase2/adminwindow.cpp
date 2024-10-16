@@ -172,11 +172,13 @@ void AdminWindow::on_actionCargar_solicitudes_triggered() {
         if (estado == "ACEPTADA") {
             if (usuarioReceptor != nullptr) {
                 usuarioReceptor->friends.addFriend(emisor); // Añadir el emisor a la lista de amigos del receptor
+                usuarioReceptor->adjacencyList->createConnection(emisor, receptor); // Crear conexión en el grafo
                 std::cout << emisor << " añadido a la lista de amigos de " << receptor << std::endl;
             }
 
             if (usuarioEmisor != nullptr) {
                 usuarioEmisor->friends.addFriend(receptor); // Añadir el receptor a la lista de amigos del emisor
+                usuarioEmisor->adjacencyList->createConnection(receptor, emisor); // Crear conexión en el grafo
                 std::cout << receptor << " añadido a la lista de amigos de " << emisor << std::endl;
             }
         }
@@ -337,4 +339,3 @@ void AdminWindow::on_actionReporte_Comentarios_triggered()
 {
 
 }
-

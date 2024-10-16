@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    adjacencylist.cpp \
     adminwindow.cpp \
     arbolb.cpp \
     avltree.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
     imagewindow.cpp \
     main.cpp \
     mainwindow.cpp \
+    neighbor.cpp \
     node.cpp \
     nodebst.cpp \
     nodedoublelist.cpp \
@@ -29,9 +31,11 @@ SOURCES += \
     solicitudlist.cpp \
     stack.cpp \
     stacknode.cpp \
+    usernode.cpp \
     userwindow.cpp
 
 HEADERS += \
+    adjacencylist.h \
     adminwindow.h \
     arbolb.h \
     avltree.h \
@@ -44,6 +48,7 @@ HEADERS += \
     friendnode.h \
     imagewindow.h \
     mainwindow.h \
+    neighbor.h \
     node.h \
     nodebst.h \
     nodedoublelist.h \
@@ -51,6 +56,7 @@ HEADERS += \
     solicitudlist.h \
     stack.h \
     stacknode.h \
+    usernode.h \
     userwindow.h
 
 FORMS += \

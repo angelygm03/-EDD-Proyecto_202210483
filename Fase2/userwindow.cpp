@@ -22,7 +22,7 @@ Userwindow::Userwindow(QWidget *parent, AVLTree *usuariosAVL, Node *usuarioActua
     pilaSolicitudes(nullptr),
     usuarioActual(usuarioActual),
     publicaciones(publicacionesList),
-    comentariosTree(comentariosTree) // Aquí inicializa el puntero
+    comentariosTree(comentariosTree)
 {
     ui->setupUi(this);
         connect(ui->pushButton_actualizarDatos, &QPushButton::clicked, this, &Userwindow::on_pushButton_actualizarDatos_clicked);
@@ -157,18 +157,20 @@ void Userwindow::aceptarSolicitud()
         }
     }
 
-    //Agregar el emisor a la lista de amigos del usuario actual
     if (usuarioActual != nullptr) {
         // Añadir el emisor a la lista de amigos del receptor (usuarioActual)
         usuarioActual->friends.addFriend(emisor.toStdString());
         QMessageBox::information(this, "Amigos", "¡Ahora son amigos!");
-        std::cout << "Amistad aceptada: " << emisor.toStdString() << " añadido a la lista de amigos de " << usuarioActual->correo << std::endl;
 
         // Añadir el receptor a la lista de amigos del emisor en el árbol AVL
         Node* usuarioEmisor = usuariosAVL->buscarPorCorreo(emisor.toStdString());
         if (usuarioEmisor != nullptr) {
             usuarioEmisor->friends.addFriend(usuarioActual->correo); // Añadir el receptor a la lista de amigos del emisor
-            std::cout << "Amistad aceptada: " << usuarioActual->correo << " añadido a la lista de amigos de " << emisor.toStdString() << std::endl;
+            std::cout << "Amistad aceptada: " << emisor.toStdString() << " añadido a la lista de amigos de " << usuarioActual->correo << std::endl;
+            // Crear la conexión en el grafo
+            usuarioActual->adjacencyList->createConnection(usuarioActual->correo, emisor.toStdString());
+            usuarioEmisor->adjacencyList->createConnection(emisor.toStdString(), usuarioActual->correo);
+            std::cout << "Amistad aceptada: " << usuarioActual->correo << " añadido al grafo de amigos de " << emisor.toStdString() << std::endl;
         }
     }
 
@@ -638,8 +640,6 @@ void Userwindow::on_pushButton_6_verArbol_clicked()
 
 void Userwindow::on_pushButton_actualizarDatos_clicked()
 {
-    qDebug() << "Se ha llamado a la función de actualización.";
-
     if (usuarioActual == nullptr) {
         QMessageBox::warning(this, "Error", "No hay usuario actual para actualizar.");
         return;
