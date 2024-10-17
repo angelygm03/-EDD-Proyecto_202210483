@@ -49,6 +49,9 @@ Userwindow::Userwindow(QWidget *parent, AVLTree *usuariosAVL, Node *usuarioActua
 
         //Llena la tabla de las sugerencias de amistad
         mostrarSugerenciasDeAmistad();
+
+        //Mostrar el grafo de las relaciones al iniciar sesión
+        graficarRelaciones();
     }
 }
 
@@ -700,7 +703,6 @@ void Userwindow::on_pushButton_actualizarDatos_clicked()
 }
 
 // Método para mostrar sugerencias de amistad
-// Método para mostrar sugerencias de amistad
 void Userwindow::mostrarSugerenciasDeAmistad() {
     if (!usuarioActual || !usuariosAVL) {
         QMessageBox::warning(this, "Error", "El usuario actual o la estructura de usuarios no están inicializados.");
@@ -782,4 +784,103 @@ void Userwindow::mostrarSugerenciasDeAmistad() {
             ui->tableWidget_sugerencias->setCellWidget(rowCount, 3, botonSolicitud);
         }
     }
+}
+
+void Userwindow::graficarRelaciones() {
+    if (!usuarioActual) {
+        QMessageBox::warning(this, "Error", "No hay usuario actual.");
+        return;
+    }
+
+    // El archivo .dot para crear el grafo
+    string dotFileName = "grafo_relaciones.dot";
+    ofstream out(dotFileName);
+
+    if (!out) {
+        QMessageBox::warning(this, "Error", "No se pudo crear el archivo para el grafo.");
+        return;
+    }
+
+    // Inicia el grafo como no dirigido
+    out << "graph G {\n";
+    out << "node [shape=circle];\n"; // Establece un estilo de círculo para los nodos
+
+    // Agregar al usuario actual
+    out << "\"" << usuarioActual->correo << "\" [label=\"" << usuarioActual->nombres << "\", color=\"blue\"];\n";
+
+    // Agregar amigos
+    unordered_set<string> amigosActuales;
+    for (FriendNode* f = usuarioActual->friends.head; f != nullptr; f = f->next) {
+        Node* amigo = usuariosAVL->buscarPorCorreo(f->friendEmail);
+        if (amigo) {
+            out << "\"" << amigo->correo << "\" [label=\"" << amigo->nombres << "\", color=\"blue\"];\n"; // Amigos en azul
+            out << "\"" << usuarioActual->correo << "\" -- \"" << amigo->correo << "\";\n"; // Conexión no dirigida
+            amigosActuales.insert(amigo->correo);
+        }
+    }
+
+    // Agregar amigos de amigos
+    unordered_set<string> amigosDeAmigos;
+    for (FriendNode* f = usuarioActual->friends.head; f != nullptr; f = f->next) {
+        Node* amigo = usuariosAVL->buscarPorCorreo(f->friendEmail);
+        if (!amigo) continue;
+
+        for (FriendNode* amigoDeAmigo = amigo->friends.head; amigoDeAmigo != nullptr; amigoDeAmigo = amigoDeAmigo->next) {
+            // Verificar que no sea el usuario actual ni un amigo directo
+            if (amigoDeAmigo->friendEmail != usuarioActual->correo && amigosActuales.find(amigoDeAmigo->friendEmail) == amigosActuales.end()) {
+                Node* amigoDeAmigoNode = usuariosAVL->buscarPorCorreo(amigoDeAmigo->friendEmail);
+                if (amigoDeAmigoNode) {
+                    out << "\"" << amigoDeAmigoNode->correo << "\" [label=\"" << amigoDeAmigoNode->nombres << "\", color=\"green\"];\n"; // Amigos de amigos en verde
+                    out << "\"" << amigo->correo << "\" -- \"" << amigoDeAmigoNode->correo << "\";\n"; // Conexión no dirigida
+                    amigosDeAmigos.insert(amigoDeAmigo->friendEmail);
+                }
+            }
+        }
+    }
+
+    // Agregar amigos de amigos de amigos
+    for (const string& amigoDeAmigoCorreo : amigosDeAmigos) {
+        Node* amigoDeAmigo = usuariosAVL->buscarPorCorreo(amigoDeAmigoCorreo);
+        if (!amigoDeAmigo) continue;
+
+        for (FriendNode* amigoDeAmigoDeAmigo = amigoDeAmigo->friends.head; amigoDeAmigoDeAmigo != nullptr; amigoDeAmigoDeAmigo = amigoDeAmigoDeAmigo->next) {
+            // Evitar conexiones duplicadas y ya conocidas
+            if (amigosActuales.find(amigoDeAmigoDeAmigo->friendEmail) == amigosActuales.end() &&
+                amigosDeAmigos.find(amigoDeAmigoDeAmigo->friendEmail) == amigosDeAmigos.end() &&
+                amigoDeAmigoDeAmigo->friendEmail != usuarioActual->correo) {
+                Node* amigoDeAmigoDeAmigoNode = usuariosAVL->buscarPorCorreo(amigoDeAmigoDeAmigo->friendEmail);
+                if (amigoDeAmigoDeAmigoNode) {
+                    out << "\"" << amigoDeAmigoDeAmigoNode->correo << "\" [label=\"" << amigoDeAmigoDeAmigoNode->nombres << "\", color=\"black\"];\n"; // Amigos de amigos de amigos en negro
+                    out << "\"" << amigoDeAmigoCorreo << "\" -- \"" << amigoDeAmigoDeAmigoNode->correo << "\";\n"; // Conexión no dirigida
+                }
+            }
+        }
+    }
+
+    // Cerrar el grafo
+    out << "}\n";
+    out.close();
+
+    // Generar la imagen usando Graphviz
+    string command = "dot -Tpng -Gdpi=300 " + dotFileName + " -o grafo_relaciones.png";
+    if (system(command.c_str()) != 0) {
+        QMessageBox::warning(this, "Error", "No se pudo generar la imagen del grafo.");
+        return;
+    }
+
+    // Mostrar la imagen en graphicsView_grafo
+    QImage image("grafo_relaciones.png");
+    if (image.isNull()) {
+        QMessageBox::warning(this, "Error", "No se pudo cargar la imagen del grafo.");
+        return;
+    }
+
+    // Escalar la imagen
+    QImage scaledImage = image.scaled(ui->graphicsView_grafo->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    // Crear la escena y agregar la imagen
+    QGraphicsScene *scene = new QGraphicsScene(this);
+    scene->addPixmap(QPixmap::fromImage(scaledImage));
+    ui->graphicsView_grafo->setScene(scene);
+    ui->graphicsView_grafo->setRenderHint(QPainter::Antialiasing);
 }

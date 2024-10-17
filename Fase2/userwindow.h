@@ -32,6 +32,7 @@ public:
     void contarPublicacionesPorFechaNodo(NodeBST* nodo, std::map<std::string, int>& conteoFechas);
     void imprimirFechasBST(NodeBST* nodo);
     void mostrarSugerenciasDeAmistad();
+    void graficarRelaciones();
 
 private slots:
     // Funciones para manejar los eventos de la interfaz
