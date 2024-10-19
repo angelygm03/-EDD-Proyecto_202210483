@@ -1,6 +1,12 @@
 #include "avltree.h"
 #include <iostream>
 #include <fstream>
+#include <QFileDialog>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonValue>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 AVLTree::AVLTree() {
     root = nullptr;
@@ -288,4 +294,54 @@ void AVLTree::eliminarPorCorreo(const string& correo) {
     root = eliminarPorCorreo(root, correo, decrease);
 }
 
+#include <sstream>
 
+std::string AVLTree::extraerInformacion() {
+    std::stringstream ss;
+    extraerInformacionRec(root, ss);
+    return ss.str();
+}
+
+void AVLTree::extraerInformacionRec(Node* node, std::stringstream& ss) {
+    if (node != nullptr) {
+        // Recorrer el subárbol izquierdo
+        extraerInformacionRec(node->left, ss);
+
+        // Agregar información del nodo actual
+        ss << node->nombres << ";"
+           << node->apellidos << ";"
+           << node->correo << ";"
+           << node->fechaNacimiento << "\n";
+
+        // Recorrer el subárbol derecho
+        extraerInformacionRec(node->right, ss);
+    }
+}
+
+void AVLTree::cargarDesdeTexto(const std::string& texto) {
+    qDebug() << "Iniciando carga desde texto. Texto recibido:" << QString::fromStdString(texto);
+
+    QJsonDocument doc = QJsonDocument::fromJson(QString::fromStdString(texto).toUtf8());
+    if (!doc.isArray()) {
+        qDebug() << "Error: El documento no es un array JSON.";
+        return;
+    }
+
+    QJsonArray jsonArray = doc.array();
+    qDebug() << "Cantidad de usuarios a cargar:" << jsonArray.size();
+
+    for (const QJsonValue& value : jsonArray) {
+        QJsonObject usuario = value.toObject();
+
+        // Extrae los datos necesarios
+        std::string nombres = usuario["nombres"].toString().toStdString();
+        std::string apellidos = usuario["apellidos"].toString().toStdString();
+        std::string fechaNacimiento = usuario["fecha_de_nacimiento"].toString().toStdString();
+        std::string correo = usuario["correo"].toString().toStdString();
+        std::string contrasena = usuario["contraseña"].toString().toStdString();
+
+        qDebug() << "Cargando usuario:" << QString::fromStdString(nombres) << QString::fromStdString(correo);
+
+        insert(nombres, apellidos, fechaNacimiento, correo, contrasena);
+    }
+}

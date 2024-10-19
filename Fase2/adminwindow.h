@@ -12,6 +12,7 @@
 #include "doublelist.h"
 #include "arbolb.h"
 #include "binarysearchtree.h"
+#include "huffman.h"
 
 namespace Ui {
 class AdminWindow;
@@ -28,6 +29,8 @@ public:
     DoubleList* publicacionesList;
     ArbolB* comentariosTree;
     BinarySearchTree* bst;
+    void guardarUsuarios();
+    void cargarUsuarios();
 
 private slots:
     void on_actionCargar_usuarios_triggered();
@@ -46,6 +49,8 @@ private slots:
     void on_actionPublicaciones_triggered();
 
     void on_actionReporte_Comentarios_triggered();
+
+    void on_actionUsuarios_comprimir_triggered();
 
 private:
     Ui::AdminWindow *ui;

@@ -216,9 +216,16 @@
      <string>Buscar</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuComprimir">
+    <property name="title">
+     <string>Guardar</string>
+    </property>
+    <addaction name="actionUsuarios_comprimir"/>
+   </widget>
    <addaction name="menuCarga_masiva"/>
    <addaction name="menuReportes"/>
    <addaction name="menuBuscar"/>
+   <addaction name="menuComprimir"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionCargar_usuarios">
@@ -244,6 +251,11 @@
   <action name="actionPublicaciones">
    <property name="text">
     <string>Reporte publicaciones</string>
+   </property>
+  </action>
+  <action name="actionUsuarios_comprimir">
+   <property name="text">
+    <string>Usuarios</string>
    </property>
   </action>
  </widget>

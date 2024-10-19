@@ -20,6 +20,7 @@ SOURCES += \
     fechanodo.cpp \
     friendlist.cpp \
     friendnode.cpp \
+    huffman.cpp \
     imagewindow.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -27,7 +28,9 @@ SOURCES += \
     node.cpp \
     nodebst.cpp \
     nodedoublelist.cpp \
+    nodelist.cpp \
     signup.cpp \
+    simplelist.cpp \
     solicitudlist.cpp \
     stack.cpp \
     stacknode.cpp \
@@ -46,13 +49,17 @@ HEADERS += \
     fechanodo.h \
     friendlist.h \
     friendnode.h \
+    huffman.h \
+    huffmannode.h \
     imagewindow.h \
     mainwindow.h \
     neighbor.h \
     node.h \
     nodebst.h \
     nodedoublelist.h \
+    nodelist.h \
     signup.h \
+    simplelist.h \
     solicitudlist.h \
     stack.h \
     stacknode.h \

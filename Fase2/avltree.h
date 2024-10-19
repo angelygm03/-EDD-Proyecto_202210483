@@ -36,6 +36,8 @@ public:
     void inorden(Node* node, QTableWidget* table, int& row);
     void postorden(Node* node, QTableWidget* table, int& row);
     void eliminarPorCorreo(const string& correo);
-
+    std::string extraerInformacion();
+    void extraerInformacionRec(Node* node, std::stringstream& ss);
+    void cargarDesdeTexto(const std::string& texto);
 };
 #endif // AVLTREE_H

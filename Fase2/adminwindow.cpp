@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include "mainwindow.h"
 #include "imagewindow.h"
+#include "adjacencylist.h"
 #include <iostream>
 
 AdminWindow::AdminWindow(QWidget *parent, AVLTree* existingAVL, BinarySearchTree* existingBST)
@@ -339,3 +340,79 @@ void AdminWindow::on_actionReporte_Comentarios_triggered()
 {
 
 }
+
+void AdminWindow::guardarUsuarios() {
+    std::string datos = usuariosAVL->extraerInformacion();
+
+    // Verifica el texto antes de la compresión
+    qDebug() << "Datos a comprimir: " << QString::fromStdString(datos);
+
+    Huffman huffman;
+    huffman.buildHuffmanTree(datos);
+    auto huffmanCodes = huffman.getHuffmanCodes();
+
+    std::string textoComprimido = huffman.compress(datos, huffmanCodes);
+    qDebug() << "Texto comprimido guardado: " << QString::fromStdString(textoComprimido);
+
+    // Guardar el texto comprimido en un archivo
+    QString fileName = QFileDialog::getSaveFileName(this, "Guardar archivo", "", "Archivos .edd (*.edd)");
+    if (!fileName.isEmpty()) {
+        std::ofstream outFile(fileName.toStdString(), std::ios::binary);
+        if (outFile) {
+            outFile << textoComprimido;
+            outFile.close();
+            QMessageBox::information(this, "Éxito", "Usuarios guardados correctamente.");
+        } else {
+            QMessageBox::warning(this, "Error", "No se pudo guardar el archivo.");
+        }
+    }
+}
+
+void AdminWindow::cargarUsuarios() {
+    qDebug() << "Iniciando el proceso de carga de usuarios desde archivo .edd...";
+
+    QString fileName = QFileDialog::getOpenFileName(this, "Abrir archivo", "", "Archivos .edd (*.edd)");
+    if (!fileName.isEmpty()) {
+        std::ifstream inFile(fileName.toStdString(), std::ios::binary);
+        if (!inFile.is_open()) {
+            qDebug() << "Error al abrir el archivo:" << fileName;
+            QMessageBox::warning(this, "Error", "No se pudo abrir el archivo.");
+            return;
+        }
+
+        std::string textoComprimido((std::istreambuf_iterator<char>(inFile)),
+                                    std::istreambuf_iterator<char>());
+        inFile.close();
+        qDebug() << "Contenido del archivo leído, longitud:" << textoComprimido.length();
+
+        Huffman huffman;
+        std::string textoDescomprimido = huffman.decompress(textoComprimido);
+        qDebug() << "Texto descomprimido, longitud:" << textoDescomprimido.length();
+        qDebug() << "Contenido del texto descomprimido:" << QString::fromStdString(textoDescomprimido);
+
+        if (textoDescomprimido.empty())
+        {
+            qDebug() << "La descompresión no produjo datos válidos.";
+            return; // Detener el proceso
+        }
+
+        // Validar si el texto descomprimido es efectivo
+        if (textoDescomprimido.empty()) {
+            qDebug() << "La descompresión no produjo datos válidos.";
+            QMessageBox::warning(this, "Error", "La descompresión no produjo datos válidos.");
+            return;
+        }
+
+        // Cargar usuarios en el árbol AVL
+        usuariosAVL->cargarDesdeTexto(textoDescomprimido);
+    } else {
+        qDebug() << "No se seleccionó ningún archivo.";
+        QMessageBox::warning(this, "Error", "No se seleccionó ningún archivo.");
+    }
+}
+
+void AdminWindow::on_actionUsuarios_comprimir_triggered()
+{
+    guardarUsuarios();
+}
+

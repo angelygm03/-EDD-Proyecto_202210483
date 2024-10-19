@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include "imagewindow.h"
+#include "adjacencylist.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -792,7 +793,6 @@ void Userwindow::graficarRelaciones() {
         return;
     }
 
-    // El archivo .dot para crear el grafo
     string dotFileName = "grafo_relaciones.dot";
     ofstream out(dotFileName);
 
@@ -801,9 +801,8 @@ void Userwindow::graficarRelaciones() {
         return;
     }
 
-    // Inicia el grafo como no dirigido
     out << "graph G {\n";
-    out << "node [shape=circle];\n"; // Establece un estilo de círculo para los nodos
+    out << "node [shape=circle];\n";
 
     // Agregar al usuario actual
     out << "\"" << usuarioActual->correo << "\" [label=\"" << usuarioActual->nombres << "\", color=\"blue\"];\n";
@@ -813,7 +812,7 @@ void Userwindow::graficarRelaciones() {
     for (FriendNode* f = usuarioActual->friends.head; f != nullptr; f = f->next) {
         Node* amigo = usuariosAVL->buscarPorCorreo(f->friendEmail);
         if (amigo) {
-            out << "\"" << amigo->correo << "\" [label=\"" << amigo->nombres << "\", color=\"blue\"];\n"; // Amigos en azul
+            out << "\"" << amigo->correo << "\" [label=\"" << amigo->nombres << "\", color=\"orange\"];\n"; // Amigos en azul
             out << "\"" << usuarioActual->correo << "\" -- \"" << amigo->correo << "\";\n"; // Conexión no dirigida
             amigosActuales.insert(amigo->correo);
         }
@@ -857,11 +856,9 @@ void Userwindow::graficarRelaciones() {
         }
     }
 
-    // Cerrar el grafo
     out << "}\n";
     out.close();
 
-    // Generar la imagen usando Graphviz
     string command = "dot -Tpng -Gdpi=300 " + dotFileName + " -o grafo_relaciones.png";
     if (system(command.c_str()) != 0) {
         QMessageBox::warning(this, "Error", "No se pudo generar la imagen del grafo.");

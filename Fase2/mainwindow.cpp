@@ -64,5 +64,3 @@ void MainWindow::on_pushButton_Registro_clicked() {
     signupWindow->show();
     this->hide();
 }
-
-
