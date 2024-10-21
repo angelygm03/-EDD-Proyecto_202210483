@@ -1,0 +1,10 @@
+digraph G {
+    node [fontname="Arial"];
+    "21/08/2024" [label="21/08/2024"];
+    "21/08/2024_pub0" [label="et@example.com: Cocinando mi plato favorito, nada como la comida casera.\n11:40", shape=box];
+    "21/08/2024" -> "21/08/2024_pub0";
+    "21/08/2024" -> "12/10/2024";
+    "12/10/2024" [label="12/10/2024"];
+    "12/10/2024_pub0" [label="et@example.com: JAJAAJAJAJAJ\n15:54", shape=box];
+    "12/10/2024" -> "12/10/2024_pub0";
+}
