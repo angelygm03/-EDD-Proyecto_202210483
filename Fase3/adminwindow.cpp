@@ -342,4 +342,198 @@ void AdminWindow::on_actionReporte_Comentarios_triggered()
 }
 
 
+void AdminWindow::on_actionLista_de_amistades_triggered()
+{
+    // Verificamos si el árbol AVL tiene algún usuario
+    if (!usuariosAVL->root) {
+        QMessageBox::warning(this, "Error", "No hay usuarios disponibles.");
+        qDebug() << "El árbol AVL está vacío. No se pueden generar listas de adyacencia.";
+        return;
+    }
 
+    // Variables para la generación de archivos .dot y .png
+    std::string filename = "adjacency_list";
+
+    // Generar la lista de adyacencia para todos los usuarios
+    qDebug() << "Generando lista de adyacencia...";
+    generateAdjacencyListGraph(usuariosAVL->root, filename);
+
+    // Asegurar que los archivos `.png` se generaron antes de mostrar
+    QString filePath = QString::fromStdString(filename) + ".png"; // Cambiar esto por el nombre real que generaste
+
+    // Verificar si el archivo fue creado
+    QFileInfo checkFile(filePath);
+    if (!checkFile.exists() || !checkFile.isFile()) {
+        QMessageBox::warning(this, "Error", "No se pudo generar el gráfico de la lista de adyacencia.");
+        qDebug() << "No se encontró el archivo:" << filePath;
+        return;
+    }
+
+    // Mostrar la imagen generada
+    qDebug() << "Mostrando la imagen generada.";
+    ImageWindow *imageWindow = new ImageWindow(filePath, this);
+    imageWindow->setWindowTitle("Lista de Adyacencia");
+    imageWindow->resize(800, 600);
+    imageWindow->show();
+}
+
+// Método adicional que se encarga de generar el gráfico de la lista de adyacencia
+void AdminWindow::generateAdjacencyListGraph(Node* node, const std::string& filename) {
+    // Crear un archivo DOT
+    std::ofstream outFile(filename + ".dot");
+
+    if (!outFile.is_open()) {
+        qDebug() << "Error al crear el archivo .dot";
+        return;
+    }
+
+    // Escribir el encabezado del archivo DOT
+    outFile << "digraph adjacency_list {\n";
+    outFile << "rankdir=LR;\n";
+
+    // Recorrer el árbol y agregar nodos y conexiones
+    traverseAndGraph(node, outFile);
+
+    // Escribir el pie del archivo DOT
+    outFile << "}\n";
+    outFile.close();
+    qDebug() << "Archivo DOT generado:" << QString::fromStdString(filename) + ".dot";
+
+    // Generar la imagen a partir del archivo DOT
+    std::string command = "dot -Tpng " + filename + ".dot -o " + filename + ".png";
+    int result = system(command.c_str());
+
+    if (result != 0) {
+        qDebug() << "Ocurrió un error al generar la imagen.";
+    } else {
+        qDebug() << "La imagen fue generada exitosamente.";
+    }
+}
+
+// Método auxiliar que recorre el árbol AVL y grafica los nodos
+void AdminWindow::traverseAndGraph(Node* node, std::ofstream& outFile) {
+    if (node == nullptr) {
+        return;
+    }
+
+    // Agregar el nodo actual
+    outFile << "\"" << node->correo << "\" [label=\"" << node->nombres << " " << node->apellidos << "\"];\n";
+
+    // Graficar la lista de adyacencia del usuario
+    if (node->adjacencyList) {
+        qDebug() << "Procesando lista de adyacencia para el usuario:" << QString::fromStdString(node->nombres);
+        UserNode* currentUserNode = node->adjacencyList->head;
+        while (currentUserNode) {
+            Neighbor* currentNeighbor = currentUserNode->neighbors;
+            while (currentNeighbor) {
+                outFile << "\"" << currentUserNode->userName << "\" -> \"" << currentNeighbor->friendName << "\" [dir=\"both\"];\n";
+                currentNeighbor = currentNeighbor->next;
+            }
+            currentUserNode = currentUserNode->next;
+        }
+    } else {
+        qDebug() << "No se encontró lista de adyacencia para el usuario:" << QString::fromStdString(node->nombres);
+    }
+
+    // Recorrer el árbol en inorden para continuar con otros nodos
+    traverseAndGraph(node->left, outFile);
+    traverseAndGraph(node->right, outFile);
+}
+
+void AdminWindow::on_actionGrafo_de_amistades_triggered() {
+    // Verificamos si el árbol AVL tiene algún usuario
+    if (!usuariosAVL->root) {
+        QMessageBox::warning(this, "Error", "No hay usuarios disponibles.");
+        qDebug() << "El árbol AVL está vacío. No se pueden generar el grafo de amistades.";
+        return;
+    }
+
+    // Variables para la generación de archivos .dot y .png
+    std::string filename = "friendship_graph";
+
+    // Generar el grafo de amistades
+    qDebug() << "Generando grafo de amistades...";
+    generateFriendshipGraph(usuariosAVL->root, filename);
+
+    // Asegurar que los archivos `.png` se generaron antes de mostrar
+    QString filePath = QString::fromStdString(filename) + ".png";
+
+    // Verificar si el archivo fue creado
+    QFileInfo checkFile(filePath);
+    if (!checkFile.exists() || !checkFile.isFile()) {
+        QMessageBox::warning(this, "Error", "No se pudo generar el grafo de amistades.");
+        qDebug() << "No se encontró el archivo:" << filePath;
+        return;
+    }
+
+    // Mostrar la imagen generada
+    qDebug() << "Mostrando la imagen generada del grafo de amistades.";
+    ImageWindow *imageWindow = new ImageWindow(filePath, this);
+    imageWindow->setWindowTitle("Grafo de Amistades");
+    imageWindow->resize(800, 600);
+    imageWindow->show();
+}
+
+// Método adicional que se encarga de generar el gráfico del grafo de amistades
+void AdminWindow::generateFriendshipGraph(Node* node, const std::string& filename) {
+    // Crear un archivo DOT
+    std::ofstream outFile(filename + ".dot");
+
+    if (!outFile.is_open()) {
+        qDebug() << "Error al crear el archivo .dot para el grafo de amistades.";
+        return;
+    }
+
+    // Escribir el encabezado del archivo DOT
+    outFile << "graph friendship_graph {\n";
+    outFile << "node [shape=circle];\n";  // Cambia el aspecto del nodo si es necesario
+
+    // Recorrer el árbol y agregar nodos y conexiones
+    traverseAndGraphFriendships(node, outFile);
+
+    // Escribir el pie del archivo DOT
+    outFile << "}\n";
+    outFile.close();
+    qDebug() << "Archivo DOT del grafo de amistades generado:" << QString::fromStdString(filename) + ".dot";
+
+    // Generar la imagen a partir del archivo DOT
+    std::string command = "dot -Tpng " + filename + ".dot -o " + filename + ".png";
+    int result = system(command.c_str());
+
+    if (result != 0) {
+        qDebug() << "Ocurrió un error al generar la imagen del grafo de amistades.";
+    } else {
+        qDebug() << "La imagen del grafo de amistades fue generada exitosamente.";
+    }
+}
+
+// Método auxiliar que recorre el árbol AVL y grafica las amistades
+void AdminWindow::traverseAndGraphFriendships(Node* node, std::ofstream& outFile) {
+    if (node == nullptr) {
+        return;
+    }
+
+    // Agregar el nodo actual
+    outFile << "\"" << node->correo << "\" [label=\"" << node->nombres << " " << node->apellidos << "\"];\n";
+
+    // Graficar las amistades del usuario
+    if (node->adjacencyList) {
+        qDebug() << "Procesando amistades para el usuario:" << QString::fromStdString(node->nombres);
+        UserNode* currentUserNode = node->adjacencyList->head;
+        while (currentUserNode) {
+            Neighbor* currentNeighbor = currentUserNode->neighbors;
+            while (currentNeighbor) {
+                // Asegurarse de graficar cada conexión entre usuarios
+                outFile << "\"" << node->correo << "\" -- \"" << currentNeighbor->friendName << "\";\n";
+                currentNeighbor = currentNeighbor->next;
+            }
+            currentUserNode = currentUserNode->next;
+        }
+    } else {
+        qDebug() << "No se encontró lista de amistades para el usuario:" << QString::fromStdString(node->nombres);
+    }
+
+    // Recorrer el árbol en inorden para continuar con otros nodos
+    traverseAndGraphFriendships(node->left, outFile);
+    traverseAndGraphFriendships(node->right, outFile);
+}

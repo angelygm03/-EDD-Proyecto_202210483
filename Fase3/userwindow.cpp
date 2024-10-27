@@ -29,7 +29,7 @@ Userwindow::Userwindow(QWidget *parent, AVLTree *usuariosAVL, Node *usuarioActua
     comentariosTree(comentariosTree)
 {
     ui->setupUi(this);
-        connect(ui->pushButton_actualizarDatos, &QPushButton::clicked, this, &Userwindow::on_pushButton_actualizarDatos_clicked);
+    connect(ui->pushButton_actualizarDatos, &QPushButton::clicked, this, &Userwindow::on_pushButton_actualizarDatos_clicked);
     if (usuarioActual != nullptr) {
         this->bst = usuarioActual->publicaciones;
         qDebug() << "Usuario logeado:" << QString::fromStdString(usuarioActual->correo);

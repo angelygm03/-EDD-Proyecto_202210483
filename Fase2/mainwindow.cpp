@@ -93,7 +93,7 @@ void MainWindow::cargarUsuariosDesdeArchivos() {
             qDebug() << "Elemento descomprimido:" << QString::fromStdString(userInfo.back());
         }
 
-        // Agregar al árbol AVL
+        // Separar los datos de usuario y solicitudes
         if (userInfo.size() == 5) {
             int emptyFields = 0;
             for (const auto& info : userInfo) {
@@ -108,6 +108,25 @@ void MainWindow::cargarUsuariosDesdeArchivos() {
 
             usuariosAVL->insert(userInfo[0], userInfo[1], userInfo[2], userInfo[3], userInfo[4]);
             qDebug() << "Usuario cargado:" << QString::fromStdString(userInfo[3]);
+
+            // Cargar la pila de solicitudes
+            std::string requestsData; // Aquí almacenarás las solicitudes
+            while (std::getline(ss, item, '\n')) {
+                requestsData += item + "\n"; // Agregar solicitudes
+            }
+
+            std::istringstream requestStream(requestsData);
+            std::string requestLine;
+            while (std::getline(requestStream, requestLine)) {
+                std::istringstream requestItem(requestLine);
+                std::string emisor, receptor, estado;
+                std::getline(requestItem, emisor, ',');
+                std::getline(requestItem, receptor, ',');
+                std::getline(requestItem, estado, ',');
+                // Agregar a la pila
+                usuariosAVL->agregarSolicitud(emisor, receptor, estado); // Método hipotético que deberías implementar
+            }
+
         } else {
             qDebug() << "Error: La información descomprimida no tiene 5 elementos.";
         }

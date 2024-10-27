@@ -52,33 +52,42 @@ void AdjacencyList::createConnection(const string& userName1, const string& user
 }
 
 // Generar gráfico del grafo
-void AdjacencyList::graph(const string &filename) {
-    ofstream out(filename + ".dot");
+void AdjacencyList::graph(const std::string &filename) {
+    std::ofstream out(filename + ".dot");
     if (!out) {
-        cerr << "Error al crear el archivo dot\n";
+        std::cerr << "Error al crear el archivo dot\n";
         return;
     }
 
-    out << "digraph g {\n";
+    out << "graph g {\n";
     out << "rankdir=LR;\n";
 
     UserNode* current = head;
     while (current) {
         out << "\"" << current->userName << "\" [label=\"" << current->userName << "\"];\n";
-        current->graphNeighbors(out);
+        Neighbor* aux = current->neighbors;
+
+        while (aux) {
+            // Evita duplicar conexiones ya que este es un grafo no dirigido
+            if (current->userName < aux->friendName) {
+                out << "\"" << current->userName << "\" -- \"" << aux->friendName << "\";\n";
+            }
+            aux = aux->next;
+        }
+
         current = current->next;
     }
 
     out << "}\n";
     out.close();
 
-    //generar la imagen
-    string command = "dot -Tpng " + filename + ".dot -o " + filename + ".png";
+    // Generar imagen
+    std::string command = "dot -Tpng " + filename + ".dot -o " + filename + ".png";
     int result = system(command.c_str());
 
     if (result != 0) {
-        cout << "Ocurrió un error al generar la imagen.\n";
+        std::cout << "Ocurrió un error al generar la imagen.\n";
     } else {
-        cout << "La imagen fue generada exitosamente.\n";
+        std::cout << "La imagen fue generada exitosamente.\n";
     }
 }

@@ -29,6 +29,10 @@ public:
     DoubleList* publicacionesList;
     ArbolB* comentariosTree;
     BinarySearchTree* bst;
+    void generateAdjacencyListGraph(Node* node, const std::string& filename);
+    void traverseAndGraph(Node* node, std::ofstream& outFile);
+    void generateFriendshipGraph(Node* node, const std::string& filename);
+    void traverseAndGraphFriendships(Node* node, std::ofstream& outFile);
 
 private slots:
     void on_actionCargar_usuarios_triggered();
@@ -48,9 +52,10 @@ private slots:
 
     void on_actionReporte_Comentarios_triggered();
 
-    void on_actionUsuarios_comprimir_triggered();
 
-    void on_actionSolicitudes_recibidas_triggered();
+    void on_actionLista_de_amistades_triggered();
+
+    void on_actionGrafo_de_amistades_triggered();
 
 private:
     Ui::AdminWindow *ui;

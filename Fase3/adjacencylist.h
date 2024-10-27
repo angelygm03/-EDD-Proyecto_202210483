@@ -7,9 +7,9 @@
 
 class AdjacencyList {
 private:
-    UserNode* head; // Puntero a la cabeza de la lista
 
 public:
+    UserNode* head; // Puntero a la cabeza de la lista
     AdjacencyList();
     ~AdjacencyList();
     void insert(const std::string& userName);

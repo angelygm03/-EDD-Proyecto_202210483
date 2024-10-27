@@ -293,3 +293,10 @@ void AVLTree::eliminarPorCorreo(const string& correo) {
     bool decrease = false;
     root = eliminarPorCorreo(root, correo, decrease);
 }
+
+void AVLTree::agregarSolicitud(const std::string& emisor, const std::string& receptor, const std::string& estado) {
+    Node* usuario = buscarPorCorreo(receptor);
+    if (usuario) {
+        usuario->solicitudes.push(emisor, receptor, estado);
+    }
+}

@@ -36,5 +36,6 @@ public:
     void inorden(Node* node, QTableWidget* table, int& row);
     void postorden(Node* node, QTableWidget* table, int& row);
     void eliminarPorCorreo(const string& correo);
+    void agregarSolicitud(const std::string& emisor, const std::string& receptor, const std::string& estado);
 };
 #endif // AVLTREE_H

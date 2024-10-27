@@ -210,6 +210,8 @@
     </property>
     <addaction name="actionUsuarios"/>
     <addaction name="actionPublicaciones"/>
+    <addaction name="actionLista_de_amistades"/>
+    <addaction name="actionGrafo_de_amistades"/>
    </widget>
    <widget class="QMenu" name="menuBuscar">
     <property name="title">
@@ -274,6 +276,16 @@
   <action name="actionSolicitudes_enviadas">
    <property name="text">
     <string>Solicitudes enviadas</string>
+   </property>
+  </action>
+  <action name="actionLista_de_amistades">
+   <property name="text">
+    <string>Lista de amistades</string>
+   </property>
+  </action>
+  <action name="actionGrafo_de_amistades">
+   <property name="text">
+    <string>Grafo de amistades</string>
    </property>
   </action>
  </widget>
