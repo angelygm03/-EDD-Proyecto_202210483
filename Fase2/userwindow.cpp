@@ -243,6 +243,7 @@ void Userwindow::on_pushButton_clicked() {
         qDebug() << "Datos comprimidos, tamaño:" << compressedData.size() << " bytes.";
 
         // Guardar el archivo
+        qDebug() << "Correo del usuario actual al guardar el archivo:" << QString::fromStdString(usuarioActual->correo);
         std::string fileName = usuarioActual->correo + ".edd";
         qDebug() << "Nombre del archivo a guardar:" << QString::fromStdString(fileName);
 
@@ -700,7 +701,6 @@ void Userwindow::on_pushButton_actualizarDatos_clicked()
     QString nuevosApellidos = ui->lineEdit_3_apellidosUsuario->text();
     QString nuevaFechaNac = ui->lineEdit_5_fechanacUsuario->text();
     QString nuevaContrasena = ui->lineEdit_6_contrasena->text();
-
     // Imprimir los valores leídos para verificar
     qDebug() << "Valores leídos:";
     qDebug() << "Nombre:" << nuevoNombre;
@@ -721,6 +721,7 @@ void Userwindow::on_pushButton_actualizarDatos_clicked()
         actualizado = true;
         qDebug() << "Apellidos actualizados.";
     }
+
     if (QString::fromStdString(usuarioActual->fechaNacimiento) != nuevaFechaNac) {
         usuarioActual->fechaNacimiento = nuevaFechaNac.toStdString();
         actualizado = true;
@@ -735,10 +736,12 @@ void Userwindow::on_pushButton_actualizarDatos_clicked()
     // Muestra el mensaje según el estado de 'actualizado'
     if (actualizado) {
         qDebug() << "Actualizando información en el AVL.";
+        qDebug() << "Correo antes de eliminar del AVL:" << QString::fromStdString(usuarioActual->correo);
         usuariosAVL->eliminarPorCorreo(usuarioActual->correo);
         usuariosAVL->insert(usuarioActual->nombres, usuarioActual->apellidos,
                             usuarioActual->fechaNacimiento, usuarioActual->correo,
                             usuarioActual->contrasena);
+        qDebug() << "Correo después de actualización:" << QString::fromStdString(usuarioActual->correo);
         QMessageBox::information(this, "Actualización exitosa", "La información de usuario ha sido actualizada.");
     } else {
         qDebug() << "No se realizaron cambios.";
